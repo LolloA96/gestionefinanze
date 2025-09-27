@@ -190,7 +190,7 @@ p {
 }
 
 body {
-  background-image: url('img/Background.png');
+  background-image: url('img/Background.png') !important;
   background-size: cover;          /* fa sì che l'immagine riempia tutta la pagina */
   background-repeat: no-repeat;    /* evita che si ripeta più volte */
   background-position: center;     /* centra l'immagine */

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>I tuoi documenti</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="docs-main">
@@ -16,33 +16,17 @@
       <ul class="docs-list">
         <li class="docs-item">
           <span>Busta paga settembre</span>
-          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+          <button class="icon-btn" title="Apri documento"><span class="icon-doc">&#128196;</span></button>
         </li>
-        <li class="docs-item">
-          <span>Ritenuta D'acconto</span>
-          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
-        </li>
-        <li class="docs-item">
-          <span>Ritenuta D'acconto</span>
-          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
-        </li>
-        <li class="docs-item">
-          <span>Ritenuta D'acconto</span>
-          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
-        </li>
-        <li class="docs-item">
-          <span>Ritenuta D'acconto</span>
-          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
-        </li>
+        <!-- altri item -->
       </ul>
     </section>
   </main>
 
-  <!-- Menù basso -->
   <nav class="bottom-nav">
-    <button class="nav-item">&#8962;</button>
-    <button class="nav-item">&#43;</button>
-    <button class="nav-item nav-item-docs active">&#128196;</button>
+    <a href="index.html" class="nav-item">&#8962;</a>
+    <a href="#" class="nav-item">+</a>
+    <a href="documenti.html" class="nav-item nav-item-docs active">&#128196;</a>
   </nav>
 
   <!-- Overlay aggiungi documento -->
@@ -50,8 +34,8 @@
     <div class="overlay-content" id="contentAddDoc">
       <h3>Aggiungi Documenti</h3>
       <form id="addDocForm">
-        <input type="text" placeholder="Titolo" required>
-        <input type="file" placeholder="File" style="background:#313143; color:#ccc;" required>
+        <input type="text" placeholder="Titolo" required />
+        <input type="file" style="background:#313143; color:#ccc;" required />
         <textarea placeholder="Note"></textarea>
         <button type="submit" class="overlay-add-btn"><span style="font-size:1.2em;">+</span> Aggiungi ora</button>
       </form>
