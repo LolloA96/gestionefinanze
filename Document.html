@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>I tuoi documenti</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="docs-main">
+    <header class="docs-header">
+      <h2>I tuoi documenti</h2>
+      <button id="openAddDoc" class="add-doc-btn">+</button>
+    </header>
+    <section class="docs-list-section">
+      <ul class="docs-list">
+        <li class="docs-item">
+          <span>Busta paga settembre</span>
+          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+        </li>
+        <li class="docs-item">
+          <span>Ritenuta D'acconto</span>
+          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+        </li>
+        <li class="docs-item">
+          <span>Ritenuta D'acconto</span>
+          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+        </li>
+        <li class="docs-item">
+          <span>Ritenuta D'acconto</span>
+          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+        </li>
+        <li class="docs-item">
+          <span>Ritenuta D'acconto</span>
+          <button class="icon-btn"><span class="icon-doc">&#128196;</span></button>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Menù basso -->
+  <nav class="bottom-nav">
+    <button class="nav-item">&#8962;</button>
+    <button class="nav-item">&#43;</button>
+    <button class="nav-item nav-item-docs active">&#128196;</button>
+  </nav>
+
+  <!-- Overlay aggiungi documento -->
+  <div id="overlay-add-doc" class="custom-overlay hidden">
+    <div class="overlay-content" id="contentAddDoc">
+      <h3>Aggiungi Documenti</h3>
+      <form id="addDocForm">
+        <input type="text" placeholder="Titolo" required>
+        <input type="file" placeholder="File" style="background:#313143; color:#ccc;" required>
+        <textarea placeholder="Note"></textarea>
+        <button type="submit" class="overlay-add-btn"><span style="font-size:1.2em;">+</span> Aggiungi ora</button>
+      </form>
+      <button class="overlay-close" id="closeAddDoc">X</button>
+    </div>
+  </div>
+
+  <script src="Document.js"></script>
+</body>
+</html>

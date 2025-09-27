@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home - Gestione Finanze</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-overlay"></div>
+  <header>
+    <div class="user-info">
+      <div class="user-initial">L</div>
+      <span id="userName">Lorenzo</span>
+    </div>
+    <div class="profile-icon" id="profileIcon">L</div>
+  </header>
+
+  <main>
+    <section class="overview">
+      <div class="card">
+        <h3>Entrate</h3>
+        <p id="income">1000,00€</p>
+      </div>
+      <div class="card">
+        <h3>Risparmi</h3>
+        <p id="savings">100,00€</p>
+      </div>
+    </section>
+    <section class="goal">
+      <h4>Obiettivo da Raggiungere</h4>
+      <button id="addGoalBtn">Aggiungi obiettivo</button>
+    </section>
+    <section class="monthly-expenses">
+      <h3>Le spese del mese</h3>
+      <ul id="expensesList">
+        <li>Week1 -100,00€</li>
+        <li>Week2 -100,00€</li>
+        <li>Week3 -100,00€</li>
+      </ul>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button id="homeBtn" class="nav-item"><span>&#8962;</span></button>
+    <button id="openOverlay" class="nav-add">+</button>
+    <button id="documentsBtn" class="nav-item"><span>&#128196;</span></button>
+  </nav>
+
+  <!-- Overlay Entrata/Uscita -->
+<div id="overlay" class="custom-overlay hidden">
+  <div class="overlay__content" id="overlayContent">
+    <div class="overlay__tabs">
+      <button id="tabEntrata" class="tab-btn active">Entrate</button>
+      <button id="tabUscita" class="tab-btn">Uscite</button>
+    </div>
+    <form id="overlayForm">
+      <input type="text" placeholder="Nome" required />
+      <input type="number" placeholder="Quantità" required />
+      <textarea placeholder="Note"></textarea>
+      <button class="add-btn" type="submit">
+        <span style="font-size:1.4em;">+</span> Aggiungi ora
+      </button>
+    </form>
+  </div>
+</div>
+
+  <script src="app.js"></script>
+
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
+    authDomain: "gestione-finanze-95e06.firebaseapp.com",
+    projectId: "gestione-finanze-95e06",
+    storageBucket: "gestione-finanze-95e06.firebasestorage.app",
+    messagingSenderId: "229873840755",
+    appId: "1:229873840755:web:5fe74e3199082d72f07006",
+    measurementId: "G-QJH7V53NKJ"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+<script type="module">
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+  const auth = getAuth();
+  console.log("Firebase Auth inizializzato:", auth);
+</script>
+
+
+</body>
+</html>

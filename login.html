@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signin - Gestione Finanze</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="auth-container">
+    <h2>Iscriviti Ora</h2>
+    <form id="signupForm" class="auth-form">
+      <label for="signupName">Nome</label>
+      <input type="text" id="signupName" required />
+
+      <label for="signupSurname">Cognome</label>
+      <input type="text" id="signupSurname" required />
+
+      <label for="signupUser">Username</label>
+      <input type="text" id="signupUser" required />
+
+      <label for="signupEmail">Email</label>
+      <input type="email" id="signupEmail" required />
+
+      <label for="signupPassword">Password</label>
+      <input type="password" id="signupPassword" required />
+
+      <button type="submit">Registrati Ora</button>
+    </form>
+
+    <p>Hai già un account? <button id="goLogin" class="link-button">Accedi</button></p>
+
+    <form id="loginForm" class="auth-form hidden">
+      <h2>Accedi</h2>
+      <label for="loginUser">Email o Username</label>
+      <input type="text" id="loginUser" required />
+
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" required />
+
+      <button type="submit">Accedi</button>
+      <p><button id="goSignUp" class="link-button">Non hai un account? Iscriviti</button></p>
+    </form>
+
+  </main>
+  <script type="module" src="auth.js"></script>
+</body>
+</html>
