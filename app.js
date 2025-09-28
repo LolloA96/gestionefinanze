@@ -62,11 +62,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Submit form demo
   overlayForm.addEventListener('submit', e => {
-    e.preventDefault();
-    alert('Operazione aggiunta!');
-    overlay.classList.add('hidden');
-  });
+  e.preventDefault();
 
+  // Prendi i dati dal form
+  const nome = e.target.elements[0].value;
+  const quantità = e.target.elements[1].value;
+
+  // Determina se è entrata o uscita
+  const isEntrata = tabEntrata.classList.contains('active');
+
+  // Costruisci la stringa da inserire in base al tipo
+  const nuovaVoce = isEntrata 
+    ? `${nome}: +${quantità}€`   // entrata con segno +
+    : `${nome}: -${quantità}€`;  // uscita con segno -
+
+  // Crea nuovo elemento <li>
+  const nuovoLi = document.createElement('li');
+  nuovoLi.textContent = nuovaVoce;
+
+  // Inserisci nella lista spese
+  expensesList.appendChild(nuovoLi);
+
+  // Pulisci form e chiudi overlay
+  e.target.reset();
+  overlay.classList.add('hidden');
 });
+
+}); 
