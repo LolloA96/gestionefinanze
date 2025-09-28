@@ -1,20 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Dati iniziali
-  let income = 1200;
-  const savings = 400;
-  const expenses = 800;
+  // Funzione per convertire da stringa a numero
+  function parseAmount(str) {
+    return parseFloat(str ? str.toString().replace('€', '').replace(',', '.') : '0') || 0;
+  }
 
+  // Carica dati da localStorage o imposta default a 0
+  let income = parseAmount(localStorage.getItem('income'));
+  const savings = parseAmount(localStorage.getItem('savings'));
+  let expensesData = JSON.parse(localStorage.getItem('expensesData')) || [];
+
+  // Inizializza dati se nulli (azzeramento)
+  if (localStorage.getItem('reset') !== 'done') {
+    income = 0;
+    expensesData = [];
+    localStorage.setItem('income', income);
+    localStorage.setItem('expensesData', JSON.stringify(expensesData));
+    localStorage.setItem('reset', 'done');
+  }
+
+  // Aggiorna UI con dati caricati o azzerati
   document.getElementById('income').textContent = income.toFixed(2) + '€';
   document.getElementById('savings').textContent = savings.toFixed(2) + '€';
 
-  // Lista spese iniziale
-  const expensesData = [
-    { desc: 'Spesa super', amount: 100 },
-    { desc: 'Benzina', amount: 50 },
-    { desc: 'Uscita serale', amount: 80 }
-  ];
-
   const expensesList = document.getElementById('expensesList');
+  expensesList.innerHTML = '';
   expensesData.forEach(exp => {
     const li = document.createElement('li');
     li.textContent = `${exp.desc}: ${exp.amount.toFixed(2)}€`;
@@ -29,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabUscita = document.getElementById('tabUscita');
   const overlayForm = document.getElementById('overlayForm');
 
-  // Apri overlay
+  // Gestione apertura overlay
   openOverlay.addEventListener('click', () => {
     overlay.classList.remove('hidden');
     tabEntrata.classList.add('active');
@@ -38,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     overlayForm.querySelector('button[type="submit"]').innerHTML = '<span style="font-size:1.4em;">+</span> Aggiungi ora';
   });
 
-  // Cambia tab Entrata
+  // Cambio tab Entrata
   tabEntrata.addEventListener('click', () => {
     tabEntrata.classList.add('active');
     tabUscita.classList.remove('active');
@@ -46,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     overlayForm.querySelector('button[type="submit"]').innerHTML = '<span style="font-size:1.4em;">+</span> Aggiungi ora';
   });
 
-  // Cambia tab Uscita
+  // Cambio tab Uscita
   tabUscita.addEventListener('click', () => {
     tabUscita.classList.add('active');
     tabEntrata.classList.remove('active');
@@ -54,14 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
     overlayForm.querySelector('button[type="submit"]').innerHTML = '<span style="font-size:1.4em;">+</span> Aggiungi ora';
   });
 
-  // Chiudi overlay click fuori
+  // Chiudi overlay cliccando fuori
   overlay.addEventListener('mousedown', (e) => {
     if (!overlayContent.contains(e.target)) {
       overlay.classList.add('hidden');
     }
   });
 
-  // Gestione submit form aggiunta
+  // Gestione submit form
   overlayForm.addEventListener('submit', e => {
     e.preventDefault();
 
@@ -71,11 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const isEntrata = tabEntrata.classList.contains('active');
 
     if (isEntrata) {
-      // Somma entrate esistenti con nuova
       income += quantità;
+      localStorage.setItem('income', income);
       document.getElementById('income').textContent = income.toFixed(2) + '€';
     } else {
-      // Crea nuovo elemento spesa nella lista
+      expensesData.push({ desc: nome, amount: quantità });
+      localStorage.setItem('expensesData', JSON.stringify(expensesData));
+
       const nuovoLi = document.createElement('li');
       nuovoLi.textContent = `${nome}: -${quantità.toFixed(2)}€`;
       expensesList.appendChild(nuovoLi);
@@ -84,4 +95,5 @@ document.addEventListener('DOMContentLoaded', () => {
     e.target.reset();
     overlay.classList.add('hidden');
   });
+
 });
