@@ -67,21 +67,27 @@
 
   <script src="app.js"></script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-    const firebaseConfig = {
-      apiKey: "...",
-      authDomain: "...",
-      projectId: "...",
-      storageBucket: "...",
-      messagingSenderId: "...",
-      appId: "...",
-      measurementId: "..."
-    };
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
+    authDomain: "gestione-finanze-95e06.firebaseapp.com",
+    projectId: "gestione-finanze-95e06",
+    storageBucket: "gestione-finanze-95e06.appspot.com",
+    messagingSenderId: "229873840755",
+    appId: "1:229873840755:web:5fe74e3199082d72f07006",
+    measurementId: "G-QJH7V53NKJ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  console.log("Firebase inizializzato:", app, auth);
+</script>
+
 
   <script type="module">
     import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
