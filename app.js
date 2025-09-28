@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Imposta nome utente (modificabile)
+  const userName = 'Lorenzo';
+  
+  // Imposta nome e iniziale nel DOM
+  const userNameElem = document.getElementById('userName');
+  const profileIcon = document.getElementById('profileIcon');
+  userNameElem.textContent = userName;
+  profileIcon.textContent = userName.charAt(0).toUpperCase();
+  
+  // Rendi cliccabile l'iniziale per andare al profilo
+  profileIcon.addEventListener('click', () => {
+    window.location.href = 'profilo.html'; // Cambia con il tuo link
+  });
+
   // Funzione per convertire da stringa a numero
   function parseAmount(str) {
     return parseFloat(str ? str.toString().replace('€', '').replace(',', '.') : '0') || 0;
@@ -9,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const savings = parseAmount(localStorage.getItem('savings'));
   let expensesData = JSON.parse(localStorage.getItem('expensesData')) || [];
 
-  // Inizializza dati se nulli (azzeramento)
+  // Inizializza dati se nulli (azzeramento) alla prima visita
   if (localStorage.getItem('reset') !== 'done') {
     income = 0;
     expensesData = [];
@@ -76,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const nome = e.target.elements[0].value;
     const quantità = parseFloat(e.target.elements[1].value);
-
     const isEntrata = tabEntrata.classList.contains('active');
 
     if (isEntrata) {
