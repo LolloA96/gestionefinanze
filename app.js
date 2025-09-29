@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     expensesList.appendChild(li);
   });
 
-  // Riferimenti DOM
+  // Riferimenti DOM per overlay entrate/uscite
   const openOverlay = document.getElementById('openOverlay');
   const overlay = document.getElementById('overlay');
   const overlayContent = document.getElementById('overlayContent');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabUscita = document.getElementById('tabUscita');
   const overlayForm = document.getElementById('overlayForm');
 
-  // Gestione apertura overlay
+  // Gestione apertura overlay entrate/uscite
   openOverlay.addEventListener('click', () => {
     overlay.classList.remove('hidden');
     tabEntrata.classList.add('active');
@@ -77,14 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
     overlayForm.querySelector('button[type="submit"]').innerHTML = '<span style="font-size:1.4em;">+</span> Aggiungi ora';
   });
 
-  // Chiudi overlay cliccando fuori
+  // Chiudi overlay entrate/uscite cliccando fuori
   overlay.addEventListener('mousedown', (e) => {
     if (!overlayContent.contains(e.target)) {
       overlay.classList.add('hidden');
     }
   });
 
-  // Gestione submit form
+  // Gestione submit form entrate/uscite
   overlayForm.addEventListener('submit', e => {
     e.preventDefault();
 
@@ -107,6 +107,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     e.target.reset();
     overlay.classList.add('hidden');
+  });
+
+  // Overlay Obiettivi
+  const goalOverlay = document.getElementById('goalOverlay');
+  const addGoalBtn = document.getElementById('addGoalBtn');
+
+  addGoalBtn.addEventListener('click', () => {
+    goalOverlay.classList.remove('hidden');
+  });
+
+  document.getElementById('closeGoalOverlay').addEventListener('click', () => {
+    goalOverlay.classList.add('hidden');
+  });
+
+  goalOverlay.addEventListener('mousedown', (e) => {
+    if (e.target === goalOverlay) {
+      goalOverlay.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('goalForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const amount = parseFloat(e.target.goalAmount.value);
+    if (!isNaN(amount)) {
+      // salva obiettivo, aggiorna UI, localStorage...
+      console.log("Obiettivo aggiunto:", amount);
+    }
+    goalOverlay.classList.add('hidden');
+    e.target.reset();
   });
 
 });

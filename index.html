@@ -9,13 +9,12 @@
 <body>
   <div class="bg-overlay"></div>
   <header class="main-header">
-  <div class="user-info-left">
-    <span class="welcome-text">Benvenuto,</span>
-    <span class="user-name" id="userName">Lorenzo</span>
-  </div>
-  <div class="profile-icon" id="profileIcon" tabindex="0">L</div>
-</header>
-
+    <div class="user-info-left">
+      <span class="welcome-text">Benvenuto,</span>
+      <span class="user-name" id="userName">Lorenzo</span>
+    </div>
+    <div class="profile-icon" id="profileIcon" tabindex="0">L</div>
+  </header>
 
   <main>
     <section class="overview">
@@ -43,17 +42,16 @@
   </main>
 
   <nav class="bottom-nav">
-  <a href="index.html" class="nav-item">
-    <img src="Asset/Home.svg" alt="Home icon" width="24" height="24">
-  </a>
-  <button id="openOverlay" class="nav-add">
-    <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24">
-  </button>
-  <a href="Document.html" class="nav-item">
-    <img src="Asset/File.svg" alt="File icon" width="24" height="24">
-  </a>
-</nav>
-
+    <a href="index.html" class="nav-item">
+      <img src="Asset/Home.svg" alt="Home icon" width="24" height="24" />
+    </a>
+    <button id="openOverlay" class="nav-add">
+      <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24" />
+    </button>
+    <a href="Document.html" class="nav-item">
+      <img src="Asset/File.svg" alt="File icon" width="24" height="24" />
+    </a>
+  </nav>
 
   <!-- Overlay Entrata/Uscita -->
   <div id="overlay" class="custom-overlay hidden">
@@ -69,6 +67,18 @@
         <button class="add-btn" type="submit">
           <span style="font-size:1.4em;">+</span> Aggiungi ora
         </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Overlay Obiettivo -->
+  <div id="addGoalBtn class="custom-overlay hidden">
+    <div class="overlay__content">
+      <button class="overlay-close" id="closeGoalOverlay">&times;</button>
+      <form id="goalForm">
+        <label for="goalAmount">Quantità Obiettivo</label>
+        <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
+        <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
       </form>
     </div>
   </div>
@@ -96,11 +106,10 @@
   console.log("Firebase inizializzato:", app, auth);
 </script>
 
-
-  <script type="module">
-    import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-    const auth = getAuth();
-    console.log("Firebase Auth inizializzato:", auth);
-  </script>
+<script type="module">
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  const auth = getAuth();
+  console.log("Firebase Auth inizializzato:", auth);
+</script>
 </body>
 </html>

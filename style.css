@@ -65,7 +65,7 @@ main {
   background: #292929;
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #ffffff3a
+  border: 1px solid #ffffff3a; /* FIX: ; aggiunto */
   margin-bottom: 2rem;
   text-align: center;
   margin-bottom: 20px;
@@ -84,7 +84,8 @@ main {
   background: #292929;
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #ffffff3a;}
+  border: 1px solid #ffffff3a;
+}
 
 .monthly-expenses ul {
   list-style: none;
@@ -191,12 +192,12 @@ p {
 
 body {
   background-image: url('Img/sfondo.png') !important;
-  background-size: cover;          /* fa sì che l'immagine riempia tutta la pagina */
-  background-repeat: no-repeat;    /* evita che si ripeta più volte */
-  background-position: center;     /* centra l'immagine */
-  background-attachment: fixed;    /* fa rimanere fissa l'immagine anche durante lo scroll */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
   min-height: 100vh;
-  color: white;                    /* per testi visibili sopra lo sfondo */
+  color: white;
 }
 
 .bottom-nav {
@@ -237,6 +238,7 @@ body {
   margin-top: -24px;
 }
 
+/* ============ ALTRI OVERLAY (non obiettivo) ============ */
 .overlay {
   position: fixed;
   top: 0; left: 0;
@@ -247,10 +249,7 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-.overlay.hidden {
-  display: none;
-}
+.overlay.hidden { display: none; }
 
 .over-box {
   background: #22222c;
@@ -316,31 +315,7 @@ body {
   cursor: pointer;
 }
 
-/* overlay sfondo (se vuoi accentuare il blur)
-.bg-overlay {
-  background: url('img/tuo-bg.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  position: fixed;
-  top:0; left:0; width:100vw; height:100vh; z-index:-1;
-}
-*/
-
-.custom-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(30,30,30,0.63);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.custom-overlay.hidden {
-  display: none !important;
-}
-
+/* ============ OVERLAY ENTRATE/USCITE (già esistente) ============ */
 .overlay__content {
   background: #212124;
   border-radius: 24px;
@@ -407,6 +382,7 @@ body {
   width: 100%;
 }
 
+/* ============ PROFILO, DOCUMENTI, ecc. (invariati) ============ */
 .profile-main {
   max-width: 410px;
   margin: 34px auto 100px auto;
@@ -432,9 +408,7 @@ body {
   justify-content: center;
   font-weight: bold;
 }
-.profile-info {
-  flex: 1;
-}
+.profile-info { flex: 1; }
 .profile-name {
   font-size: 1.33em;
   font-weight: bold;
@@ -480,9 +454,7 @@ body {
   background: #247fff;
   border-radius: 6px;
 }
-.profile-expenses {
-  margin-top: 32px;
-}
+.profile-expenses { margin-top: 32px; }
 .spese-mensili {
   display: flex;
   flex-direction: column;
@@ -510,53 +482,6 @@ body {
   margin-left: 12px;
   cursor: pointer;
   font-size: 1em;
-}
-
-.custom-overlay {
-  position: fixed; inset: 0;
-  background: rgba(28,28,32,0.90);
-  z-index: 99;
-  display: flex; align-items: center; justify-content: center;
-}
-
-.custom-overlay.hidden { display: none; }
-.overlay-content {
-  background: #23232a;
-  border-radius: 15px;
-  padding: 30px 25px 31px 25px;
-  min-width: 300px;
-  max-width: 340px;
-  box-shadow: 0 5px 34px #0008;
-  position: relative;
-}
-.overlay-content form {
-  display: flex; flex-direction: column; gap: 15px; margin-top: 12px;
-}
-.overlay-content input, .overlay-content textarea {
-  background: #23243a;
-  border: none;
-  border-radius: 7px;
-  padding: 10px;
-  color: #fff;
-  font-size: 1em;
-}
-.profile-edit-btn {
-  background: #3776ed; color: #fff; border: none; border-radius: 7px; height: 42px; font-weight: bold; font-size: 1.04em;
-}
-.profile-delete-btn {
-  background: none; border: 1.4px solid #f66; color: #f66; border-radius: 7px; height: 38px; font-weight: bold; font-size: 0.99em;
-  margin-top: 3px;
-}
-.overlay-close {
-  position: absolute; top: 17px; right: 16px; background: transparent; color: #fff; border: none; font-size: 1.2em; cursor: pointer;
-}
-.overlay-list ul { margin-top: 16px; margin-bottom: 0; padding-left: 0; }
-.overlay-list li { display: flex; justify-content: space-between; align-items: center; font-size: 1.06em; margin-bottom: 12px; }
-.overlay-list span { font-size: 1em; }
-
-@media (max-width: 500px) {
-  .profile-main { max-width: 98vw;}
-  .overlay-content { max-width: 96vw;}
 }
 
 .docs-main {
@@ -628,79 +553,29 @@ body {
 .icon-btn:hover {
   background: #1c3e7b;
 }
-/* Overlay */
-.custom-overlay {
-  position: fixed; inset: 0;
-  background: rgba(32,32,32,0.88);
-  z-index: 99;
-  display: flex; align-items: center; justify-content: center;
-}
-.custom-overlay.hidden { display: none; }
-.overlay-content {
-  background: #23232a;
-  border-radius: 15px;
-  padding: 27px 26px 30px 26px;
-  min-width: 310px;
-  max-width: 350px;
-  box-shadow: 0 5px 34px #0008;
-  position: relative;
-}
-.overlay-content h3 { margin-top: 0; }
-.overlay-content form {
-  display: flex; flex-direction: column; gap: 15px; margin-top: 10px;
-}
-.overlay-content input[type="text"],
-.overlay-content textarea {
-  background: #23243a;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #fff;
-  font-size: 1em;
-}
-.overlay-content input[type="file"] {
-  padding: 8px 3px;
-  border-radius: 8px;
-  font-size: 1em;
-  border: none;
-  margin-top: 3px;
-}
-.overlay-add-btn {
-  background: #2869f6; color: #fff; border: none; border-radius: 8px;
-  font-weight: 700; font-size: 1.13em;
-  height: 44px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
-.overlay-close {
-  position: absolute; top: 13px; right: 17px; font-size: 1.11em;
-  background: transparent; color: #fff; border: none; cursor: pointer;
-}
 
+/* HEADER */
 .main-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 50px 24px 50px 24px;
 }
-
 .user-info-left {
   display: flex;
   flex-direction: column;
 }
-
 .welcome-text {
   color: #bbb;
   font-size: 1em;
   margin-bottom: -2px;
 }
-
 .user-name {
   font-weight: 600;
   font-size: 1.3em;
   letter-spacing: 0.5px;
   color: #FFF;
 }
-
 .profile-icon {
   background: #2a5be2;
   color: #fff;
@@ -714,4 +589,44 @@ body {
   font-weight: bold;
   cursor: pointer;
   user-select: none;
+}
+
+/* ============ OVERLAY OBIETTIVO: CLASSI COERENTI ============ */
+.custom-overlay {                /* usata da HTML per goalOverlay */
+  position: fixed;
+  inset: 0;
+  background: rgba(30,30,30,0.63);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-overlay.hidden { display: none !important; }
+.overlay__content {              /* usata da HTML per goalOverlay e overlay principale */
+  background: #212124;
+  border-radius: 24px;
+  padding: 28px 24px 32px 24px;
+  width: 360px;
+  max-width: 96vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-shadow: 0px 5px 32px #0002;
+  position: relative;
+}
+.overlay-close {
+  position: absolute;
+  top: 17px;
+  right: 16px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 500px) {
+  .profile-main { max-width: 98vw; }
+  .overlay__content { max-width: 96vw; }
 }
