@@ -591,22 +591,24 @@ body {
   user-select: none;
 }
 
-/* ============ OVERLAY OBIETTIVO: CLASSI COERENTI ============ */
-.custom-overlay {                /* usata da HTML per goalOverlay */
+/* Overlay obiettivo: visibile quando NON ha .hidden */
+.custom-overlay {
   position: fixed;
   inset: 0;
   background: rgba(30,30,30,0.63);
-  z-index: 999;
-  display: flex !important;
+  display: flex !important;        /* visibile quando aperto */
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-}
-.custom-overlay.hidden { 
-  display: none !important; 
+  z-index: 9999;                   /* sopra a tutto */
 }
 
-.overlay__content {              /* usata da HTML per goalOverlay e overlay principale */
+/* Overlay obiettivo chiuso */
+.custom-overlay.hidden {
+  display: none !important;        /* davvero nascosto */
+}
+
+/* Contenitore interno dell’overlay */
+.overlay__content {
   background: #212124;
   color: #fff;
   border-radius: 24px;
@@ -616,8 +618,9 @@ body {
   box-shadow: 0 5px 32px #0006;
   position: relative;
   opacity: 1;                      /* evita opacità 0 da altre regole */
-  transform: translateY(0); 
+  transform: translateY(0);        /* evita che sia fuori schermo */
 }
+
 .overlay-close {
   position: absolute;
   top: 17px;
