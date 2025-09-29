@@ -8,7 +8,6 @@
 
 body {
   background: url(img/Background.png) !important;
-  color: #eee;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
