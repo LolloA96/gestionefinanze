@@ -6,7 +6,7 @@
 }
 
 body {
-  background: url('Img/Background.png') !important;
+  background: url('Img/sfondo.png') !important;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
