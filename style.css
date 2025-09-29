@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #121212;
+  background: url(img/Background.png);
   color: #eee;
   min-height: 100vh;
   display: flex;
@@ -18,7 +18,7 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  background: #1f1f1f;
+  background: transparent;
   align-items: center;
 }
 
@@ -67,6 +67,7 @@ main {
   background: #292929;
   padding: 1rem;
   border-radius: 8px;
+  border: 1px solid #ffffff3a
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -84,7 +85,7 @@ main {
   background: #292929;
   padding: 1rem;
   border-radius: 8px;
-}
+  border: 1px solid #ffffff3a;}
 
 .monthly-expenses ul {
   list-style: none;
