@@ -123,9 +123,17 @@ document.addEventListener('DOMContentLoaded', () => {
     goalOverlay.classList.remove('hidden');
   });
 
+   // Fallback: se qualche regola esterna imponesse "display:none"
+  const computed = window.getComputedStyle(goalOverlay).display;
+  if (computed === 'none') {
+    goalOverlay.style.display = 'flex';
+  }
+});
+
   // Chiudi con la X
   closeGoalOverlay?.addEventListener('click', () => {
     goalOverlay.classList.add('hidden');
+     goalOverlay.style.display = ''; // rimuove eventuali override inline
   });
 
   // Chiudi cliccando fuori dal contenuto
@@ -144,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("Obiettivo aggiunto:", amount);
     }
     goalOverlay.classList.add('hidden');
+    goalOverlay.style.display = '';
     e.target.reset();
   });
 
