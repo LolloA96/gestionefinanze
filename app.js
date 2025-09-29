@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Rendi cliccabile l'iniziale per andare al profilo
   profileIcon.addEventListener('click', () => {
-    window.location.href = 'profilo.html'; // Cambia con il tuo link
+    window.location.href = 'profile.html'; // Cambia con il tuo link
   });
 
   // Funzione per convertire da stringa a numero
