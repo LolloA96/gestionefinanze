@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Signin - Gestione Finanze</title>
+  <title>Autenticazione - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="auth-container">
-    <h2>Iscriviti Ora</h2>
+    <h2 id="authTitle">Iscriviti Ora</h2>
+
+    <!-- Sign Up -->
     <form id="signupForm" class="auth-form">
       <label for="signupName">Nome</label>
       <input type="text" id="signupName" required />
@@ -26,23 +28,115 @@
       <input type="password" id="signupPassword" required />
 
       <button type="submit">Registrati Ora</button>
+      <p>Hai già un account? <button id="goLogin" type="button" class="link-button">Accedi</button></p>
     </form>
 
-    <p>Hai già un account? <button id="goLogin" class="link-button">Accedi</button></p>
-
+    <!-- Login -->
     <form id="loginForm" class="auth-form hidden">
       <h2>Accedi</h2>
-      <label for="loginUser">Email o Username</label>
-      <input type="text" id="loginUser" required />
+
+      <label for="loginUser">Email</label>
+      <input type="email" id="loginUser" required />
 
       <label for="loginPassword">Password</label>
       <input type="password" id="loginPassword" required />
 
       <button type="submit">Accedi</button>
-      <p><button id="goSignUp" class="link-button">Non hai un account? Iscriviti</button></p>
+      <p><button id="goSignUp" type="button" class="link-button">Non hai un account? Iscriviti</button></p>
     </form>
-
   </main>
-  <script type="module" src="auth.js"></script>
+
+  <!-- Logica Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    // Inizializza Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
+      authDomain: "gestione-finanze-95e06.firebaseapp.com",
+      projectId: "gestione-finanze-95e06",
+      storageBucket: "gestione-finanze-95e06.appspot.com",
+      messagingSenderId: "229873840755",
+      appId: "1:229873840755:web:5fe74e3199082d72f07006",
+      measurementId: "G-QJH7V53NKJ"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Auth guard: se già autenticato, vai alla home
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (!location.pathname.endsWith('index.html')) {
+          window.location.href = 'index.html';
+        }
+      }
+    });
+  </script>
+
+  <!-- UI e gestione form -->
+  <script type="module">
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    const auth = getAuth();
+
+    const authTitle = document.getElementById('authTitle');
+    const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
+    const goLogin = document.getElementById('goLogin');
+    const goSignUp = document.getElementById('goSignUp');
+
+    // Switch UI
+    goLogin.addEventListener('click', () => {
+      signupForm.classList.add('hidden');
+      loginForm.classList.remove('hidden');
+      authTitle.textContent = 'Accedi';
+    });
+
+    goSignUp.addEventListener('click', () => {
+      loginForm.classList.add('hidden');
+      signupForm.classList.remove('hidden');
+      authTitle.textContent = 'Iscriviti Ora';
+    });
+
+    // Sign Up submit
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value.trim();
+      const surname = document.getElementById('signupSurname').value.trim();
+      const username = document.getElementById('signupUser').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // Aggiorna il profilo con displayName (nome + cognome o username)
+        const displayName = name && surname ? `${name} ${surname}` : (username || name || '');
+        if (displayName) {
+          await updateProfile(cred.user, { displayName });
+        }
+        // Vai in home dopo registrazione
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert(err.message);
+        console.error(err);
+      }
+    });
+
+    // Login submit
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert(err.message);
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>

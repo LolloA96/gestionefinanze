@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="bg-overlay"></div>
+
   <header class="main-header">
     <div class="user-info-left">
       <span class="welcome-text">Benvenuto,</span>
@@ -20,24 +21,22 @@
     <section class="overview">
       <div class="card">
         <h3>Entrate</h3>
-        <p id="income">1000,00€</p>
+        <p id="income">0,00€</p>
       </div>
       <div class="card">
         <h3>Risparmi</h3>
-        <p id="savings">100,00€</p>
+        <p id="savings">0,00€</p>
       </div>
     </section>
+
     <section class="goal">
       <h4>Obiettivo da Raggiungere</h4>
       <button id="addGoalBtn">Aggiungi obiettivo</button>
     </section>
+
     <section class="monthly-expenses">
       <h3>Le spese del mese</h3>
-      <ul id="expensesList">
-        <li>Week1 -100,00€</li>
-        <li>Week2 -100,00€</li>
-        <li>Week3 -100,00€</li>
-      </ul>
+      <ul id="expensesList"></ul>
     </section>
   </main>
 
@@ -45,7 +44,7 @@
     <a href="index.html" class="nav-item">
       <img src="Asset/Home.svg" alt="Home icon" width="24" height="24" />
     </a>
-    <button id="openOverlay" class="nav-add">
+    <button id="openOverlay" class="nav-add" aria-label="Aggiungi voce">
       <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24" />
     </button>
     <a href="Document.html" class="nav-item">
@@ -54,11 +53,11 @@
   </nav>
 
   <!-- Overlay Entrata/Uscita -->
-  <div id="overlay" class="custom-overlay hidden">
-    <div class="overlay__content" id="overlayContent">
+  <div id="overlay" class="custom-overlay hidden" aria-hidden="true">
+    <div class="overlay__content" id="overlayContent" role="dialog" aria-modal="true">
       <div class="overlay__tabs">
-        <button id="tabEntrata" class="tab-btn active">Entrate</button>
-        <button id="tabUscita" class="tab-btn">Uscite</button>
+        <button id="tabEntrata" class="tab-btn active" type="button">Entrate</button>
+        <button id="tabUscita" class="tab-btn" type="button">Uscite</button>
       </div>
       <form id="overlayForm">
         <input type="text" placeholder="Nome" required />
@@ -71,47 +70,52 @@
     </div>
   </div>
 
-<!-- Overlay Obiettivo -->
-<div id="goalOverlay" class="custom-overlay hidden">
-  <div class="overlay__content">
-    <button class="overlay-close" id="closeGoalOverlay">&times;</button>
-    <form id="goalForm">
-      <label for="goalAmount">Quantità Obiettivo</label>
-      <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
-      <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
-    </form>
+  <!-- Overlay Obiettivo -->
+  <div id="goalOverlay" class="custom-overlay hidden" aria-hidden="true">
+    <div class="overlay__content" role="dialog" aria-modal="true">
+      <button class="overlay-close" id="closeGoalOverlay" aria-label="Chiudi">&times;</button>
+      <form id="goalForm">
+        <label for="goalAmount">Quantità Obiettivo</label>
+        <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
+        <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
+      </form>
+    </div>
   </div>
-</div>
 
-
-
+  <!-- App logic -->
   <script src="app.js"></script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  <!-- Firebase + Auth Guard -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
-    authDomain: "gestione-finanze-95e06.firebaseapp.com",
-    projectId: "gestione-finanze-95e06",
-    storageBucket: "gestione-finanze-95e06.appspot.com",
-    messagingSenderId: "229873840755",
-    appId: "1:229873840755:web:5fe74e3199082d72f07006",
-    measurementId: "G-QJH7V53NKJ"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
+      authDomain: "gestione-finanze-95e06.firebaseapp.com",
+      projectId: "gestione-finanze-95e06",
+      storageBucket: "gestione-finanze-95e06.appspot.com",
+      messagingSenderId: "229873840755",
+      appId: "1:229873840755:web:5fe74e3199082d72f07006",
+      measurementId: "G-QJH7V53NKJ"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-  console.log("Firebase inizializzato:", app, auth);
-</script>
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch(e) { /* analytics opzionale in dev */ }
 
-<script type="module">
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-  const auth = getAuth();
-  console.log("Firebase Auth inizializzato:", auth);
-</script>
+    const auth = getAuth(app);
+
+    // Auth guard: se non autenticato, vai a login.html
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        if (!location.pathname.endsWith('login.html')) {
+          window.location.href = 'login.html';
+        }
+        return;
+      }
+      // utente autenticato: la pagina può continuare normalmente
+    });
+  </script>
 </body>
 </html>
