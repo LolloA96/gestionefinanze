@@ -72,12 +72,13 @@
   </div>
 
   <!-- Overlay Obiettivo -->
-  <div id="addGoalBtn class="custom-overlay hidden">
+  <div id="goalOverlay" class="custom-overlay hidden">
     <div class="overlay__content">
       <button class="overlay-close" id="closeGoalOverlay">&times;</button>
       <form id="goalForm">
         <label for="goalAmount">Quantità Obiettivo</label>
         <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
+        <input type="text" id="goalAmount" name="goalAmount" placeholder="Entro quanto tempo" required />
         <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
       </form>
     </div>
