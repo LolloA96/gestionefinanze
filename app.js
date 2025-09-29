@@ -109,51 +109,53 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.add('hidden');
   });
 
-  /* ============ Overlay Obiettivi ============ */
-  const goalOverlay = document.getElementById('goalOverlay');
-  const addGoalBtn = document.getElementById('addGoalBtn');
-  const closeGoalOverlay = document.getElementById('closeGoalOverlay');
-  const goalForm = document.getElementById('goalForm');
+/* ============ Overlay Obiettivi ============ */
+const goalOverlay = document.getElementById('goalOverlay');
+const addGoalBtn = document.getElementById('addGoalBtn');
+const closeGoalOverlay = document.getElementById('closeGoalOverlay');
+const goalForm = document.getElementById('goalForm');
 
-  // Safety reset: l’overlay parte chiuso
-  if (goalOverlay) goalOverlay.classList.add('hidden');
+// Safety reset: l’overlay parte chiuso
+if (goalOverlay) {
+  goalOverlay.classList.add('hidden');
+  goalOverlay.style.display = ''; // rimuove override inline eventuali
+}
 
-  // Apri al click del bottone "Aggiungi obiettivo"
-  addGoalBtn?.addEventListener('click', () => {
-    goalOverlay.classList.remove('hidden');
-  });
+// Apri al click del bottone "Aggiungi obiettivo"
+addGoalBtn?.addEventListener('click', () => {
+  goalOverlay.classList.remove('hidden');
 
-   // Fallback: se qualche regola esterna imponesse "display:none"
+  // Fallback: se qualche regola esterna imponesse "display:none"
   const computed = window.getComputedStyle(goalOverlay).display;
   if (computed === 'none') {
     goalOverlay.style.display = 'flex';
   }
 });
 
-  // Chiudi con la X
-  closeGoalOverlay?.addEventListener('click', () => {
-    goalOverlay.classList.add('hidden');
-     goalOverlay.style.display = ''; // rimuove eventuali override inline
-  });
+// Chiudi con la X
+closeGoalOverlay?.addEventListener('click', () => {
+  goalOverlay.classList.add('hidden');
+  goalOverlay.style.display = ''; // rimuove override inline
+});
 
-  // Chiudi cliccando fuori dal contenuto
-  goalOverlay?.addEventListener('mousedown', (e) => {
-    if (e.target === goalOverlay) {
-      goalOverlay.classList.add('hidden');
-    }
-  });
-
-  // Gestione submit obiettivo
-  goalForm?.addEventListener('submit', e => {
-    e.preventDefault();
-    const amount = parseFloat(e.target.goalAmount.value);
-    if (!isNaN(amount)) {
-      // salva obiettivo, aggiorna UI, localStorage...
-      console.log("Obiettivo aggiunto:", amount);
-    }
+// Chiudi cliccando fuori dal contenuto
+goalOverlay?.addEventListener('mousedown', (e) => {
+  if (e.target === goalOverlay) {
     goalOverlay.classList.add('hidden');
     goalOverlay.style.display = '';
-    e.target.reset();
-  });
-
+  }
 });
+
+// Gestione submit obiettivo
+goalForm?.addEventListener('submit', e => {
+  e.preventDefault();
+  const amount = parseFloat(e.target.goalAmount.value);
+  if (!isNaN(amount)) {
+    // salva obiettivo, aggiorna UI, localStorage...
+    console.log("Obiettivo aggiunto:", amount);
+  }
+  goalOverlay.classList.add('hidden');
+  goalOverlay.style.display = '';
+  e.target.reset();
+});
+
