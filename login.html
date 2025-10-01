@@ -10,48 +10,48 @@
   <main class="auth-container">
     <h2 id="authTitle">Iscriviti Ora</h2>
 
-    <!-- Sign Up -->
+    <!-- SIGN UP -->
     <form id="signupForm" class="auth-form">
       <label for="signupName">Nome</label>
-      <input type="text" id="signupName" required />
+      <input type="text" id="signupName" name="signupName" required />
 
       <label for="signupSurname">Cognome</label>
-      <input type="text" id="signupSurname" required />
+      <input type="text" id="signupSurname" name="signupSurname" required />
 
       <label for="signupUser">Username</label>
-      <input type="text" id="signupUser" required />
+      <input type="text" id="signupUser" name="signupUser" required />
 
       <label for="signupEmail">Email</label>
-      <input type="email" id="signupEmail" required />
+      <input type="email" id="signupEmail" name="signupEmail" required />
 
       <label for="signupPassword">Password</label>
-      <input type="password" id="signupPassword" required />
+      <input type="password" id="signupPassword" name="signupPassword" required />
 
       <button type="submit">Registrati Ora</button>
       <p>Hai già un account? <button id="goLogin" type="button" class="link-button">Accedi</button></p>
     </form>
 
-    <!-- Login -->
+    <!-- LOGIN -->
     <form id="loginForm" class="auth-form hidden">
       <h2>Accedi</h2>
 
       <label for="loginUser">Email</label>
-      <input type="email" id="loginUser" required />
+      <input type="email" id="loginUser" name="loginUser" required />
 
       <label for="loginPassword">Password</label>
-      <input type="password" id="loginPassword" required />
+      <input type="password" id="loginPassword" name="loginPassword" required />
 
       <button type="submit">Accedi</button>
       <p><button id="goSignUp" type="button" class="link-button">Non hai un account? Iscriviti</button></p>
     </form>
   </main>
 
-  <!-- Logica Auth -->
+  <!-- FIREBASE + LOGICA AUTH -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-    // Inizializza Firebase
+    // Config Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
       authDomain: "gestione-finanze-95e06.firebaseapp.com",
@@ -61,32 +61,25 @@
       appId: "1:229873840755:web:5fe74e3199082d72f07006",
       measurementId: "G-QJH7V53NKJ"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Auth guard: se già autenticato, vai alla home
+    // Redirect se già loggato
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (!location.pathname.endsWith('index.html')) {
-          window.location.href = 'index.html';
-        }
+      if (user && !location.pathname.endsWith('index.html')) {
+        window.location.href = 'index.html';
       }
     });
-  </script>
 
-  <!-- UI e gestione form -->
-  <script type="module">
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-    const auth = getAuth();
-
+    // ELEMENTI DOM
     const authTitle = document.getElementById('authTitle');
     const signupForm = document.getElementById('signupForm');
     const loginForm = document.getElementById('loginForm');
     const goLogin = document.getElementById('goLogin');
     const goSignUp = document.getElementById('goSignUp');
 
-    // Switch UI
+    // SWITCH UI
     goLogin.addEventListener('click', () => {
       signupForm.classList.add('hidden');
       loginForm.classList.remove('hidden');
@@ -99,7 +92,7 @@
       authTitle.textContent = 'Iscriviti Ora';
     });
 
-    // Sign Up submit
+    // SIGN UP SUBMIT
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('signupName').value.trim();
@@ -110,12 +103,10 @@
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        // Aggiorna il profilo con displayName (nome + cognome o username)
         const displayName = name && surname ? `${name} ${surname}` : (username || name || '');
         if (displayName) {
           await updateProfile(cred.user, { displayName });
         }
-        // Vai in home dopo registrazione
         window.location.href = 'index.html';
       } catch (err) {
         alert(err.message);
@@ -123,7 +114,7 @@
       }
     });
 
-    // Login submit
+    // LOGIN SUBMIT
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginUser').value.trim();

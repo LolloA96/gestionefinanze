@@ -9,6 +9,7 @@
 <body>
   <div class="bg-overlay"></div>
 
+  <!-- HEADER -->
   <header class="main-header">
     <div class="user-info-left">
       <span class="welcome-text">Benvenuto,</span>
@@ -17,6 +18,7 @@
     <div class="profile-icon" id="profileIcon" tabindex="0">L</div>
   </header>
 
+  <!-- MAIN CONTENT -->
   <main>
     <section class="overview">
       <div class="card">
@@ -40,6 +42,7 @@
     </section>
   </main>
 
+  <!-- NAV BOTTOM -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <img src="Asset/Home.svg" alt="Home icon" width="24" height="24" />
@@ -52,7 +55,7 @@
     </a>
   </nav>
 
-  <!-- Overlay Entrata/Uscita -->
+  <!-- OVERLAY ENTRATE/USCITE -->
   <div id="overlay" class="custom-overlay hidden" aria-hidden="true">
     <div class="overlay__content" id="overlayContent" role="dialog" aria-modal="true">
       <div class="overlay__tabs">
@@ -60,9 +63,9 @@
         <button id="tabUscita" class="tab-btn" type="button">Uscite</button>
       </div>
       <form id="overlayForm">
-        <input type="text" placeholder="Nome" required />
-        <input type="number" placeholder="Quantità" required />
-        <textarea placeholder="Note"></textarea>
+        <input type="text" name="desc" placeholder="Nome" required />
+        <input type="number" name="amount" placeholder="Quantità" required />
+        <textarea name="notes" placeholder="Note"></textarea>
         <button class="add-btn" type="submit">
           <span style="font-size:1.4em;">+</span> Aggiungi ora
         </button>
@@ -70,22 +73,60 @@
     </div>
   </div>
 
-  <!-- Overlay Obiettivo -->
+  <!-- OVERLAY OBIETTIVO -->
   <div id="goalOverlay" class="custom-overlay hidden" aria-hidden="true">
     <div class="overlay__content" role="dialog" aria-modal="true">
       <button class="overlay-close" id="closeGoalOverlay" aria-label="Chiudi">&times;</button>
       <form id="goalForm">
         <label for="goalAmount">Quantità Obiettivo</label>
         <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
+        <label for="goalDeadline">Scadenza</label>
+        <input type="text" id="goalDeadline" name="goalDeadline" placeholder="Esempio: dicembre" />
         <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
       </form>
     </div>
   </div>
 
-  <!-- App logic -->
+  <!-- OVERLAY DOCUMENTI -->
+  <div id="overlay-add-doc" class="custom-overlay hidden">
+    <div class="overlay-content" id="contentAddDoc">
+      <button id="closeAddDoc" aria-label="Chiudi">&times;</button>
+      <form id="addDocForm">
+        <input type="file" name="document" accept=".png,.jpeg,.jpg,.pdf" required />
+        <button type="submit">Aggiungi Documento</button>
+      </form>
+      <ul id="docList"></ul>
+    </div>
+  </div>
+
+  <!-- OVERLAY PROFILO / SPESE / RISPARMI -->
+  <div id="mod-profile-overlay" class="custom-overlay hidden">
+    <div class="overlay-content">
+      <button onclick="closeOverlay('mod-profile-overlay')">&times;</button>
+      <input type="text" name="nome" placeholder="Nome">
+      <input type="text" name="cognome" placeholder="Cognome">
+      <input type="email" name="email" placeholder="Email">
+      <button type="submit">Salva</button>
+    </div>
+  </div>
+
+  <div id="spese-overlay" class="custom-overlay hidden">
+    <div class="overlay-content">
+      <h2 id="titoloMese"></h2>
+      <ul id="speseList"></ul>
+    </div>
+  </div>
+
+  <div id="risparmi-overlay" class="custom-overlay hidden">
+    <div class="overlay-content">
+      <ul id="risparmiList"></ul>
+    </div>
+  </div>
+
+  <!-- SCRIPT APP -->
   <script src="app.js"></script>
 
-  <!-- Firebase + Auth Guard -->
+  <!-- FIREBASE + AUTH GUARD -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
@@ -102,7 +143,7 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch(e) { /* analytics opzionale in dev */ }
+    try { getAnalytics(app); } catch(e) { /* analytics opzionale */ }
 
     const auth = getAuth(app);
 
@@ -112,9 +153,7 @@
         if (!location.pathname.endsWith('login.html')) {
           window.location.href = 'login.html';
         }
-        return;
       }
-      // utente autenticato: la pagina può continuare normalmente
     });
   </script>
 </body>

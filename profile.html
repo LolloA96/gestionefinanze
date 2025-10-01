@@ -9,66 +9,56 @@
 <body>
   <main class="profile-main">
     <section class="profile-header">
-      <div class="profile-pic">L</div>
+      <div class="profile-pic" id="profileIcon">L</div>
       <div class="profile-info">
-        <span class="profile-name">Lorenzo Anfora <button class="edit-profile" id="editProfileBtn">&#9998;</button></span>
+        <span class="profile-name">Lorenzo Anfora 
+          <button class="edit-profile" id="editProfileBtn">&#9998;</button>
+        </span>
         <div class="profile-stats-row">
           <div class="profile-stats-card">
             <span>Risparmi Totali</span>
-            <span class="profile-amount">2200,00€</span>
+            <span class="profile-amount" id="totalSavings">0,00€</span>
           </div>
           <div class="profile-stats-card">
             <span>Obiettivo</span>
-            <div class="profile-progress-bar"><div class="profile-progress" style="width: 70%"></div></div>
+            <div class="profile-progress-bar">
+              <div class="profile-progress" id="goalProgress" style="width:0%"></div>
+            </div>
           </div>
         </div>
       </div>
     </section>
+
     <section class="profile-expenses">
       <h3>Le Tue Spese</h3>
-      <div class="spese-mensili">
-        <div class="mese-spese">
-          <span>Spese di Settembre</span>
-          <span class="cifra-mese">400,00€</span>
-          <button class="btn-mese" onclick="openSpeseOverlay('Settembre')">Visualizza Spese</button>
-        </div>
-        <div class="mese-spese">
-          <span>Spese di Agosto</span>
-          <span class="cifra-mese">400,00€</span>
-          <button class="btn-mese" onclick="openSpeseOverlay('Agosto')">Visualizza Spese</button>
-        </div>
-        <div class="mese-spese">
-          <span>Spese di Luglio</span>
-          <span class="cifra-mese">400,00€</span>
-          <button class="btn-mese" onclick="openSpeseOverlay('Luglio')">Visualizza Spese</button>
-        </div>
+      <div class="spese-mensili" id="monthlyExpenses">
+        <!-- Popolato dinamicamente dal JS -->
       </div>
     </section>
   </main>
-  
-  <!-- Menù basso come home -->
- <nav class="bottom-nav">
-  <a href="index.html" class="nav-item">
-    <img src="Asset/Home.svg" alt="Home icon" width="24" height="24">
-  </a>
-  <button id="openOverlay" class="nav-add">
-    <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24">
-  </button>
-  <a href="Document.html" class="nav-item">
-    <img src="Asset/File.svg" alt="File icon" width="24" height="24">
-  </a>
-</nav>
 
+  <!-- NAV BOTTOM -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <img src="Asset/Home.svg" alt="Home icon" width="24" height="24">
+    </a>
+    <button id="openOverlay" class="nav-add">
+      <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24">
+    </button>
+    <a href="Document.html" class="nav-item">
+      <img src="Asset/File.svg" alt="File icon" width="24" height="24">
+    </a>
+  </nav>
 
-  <!-- Overlay Modifica Profilo -->
+  <!-- OVERLAY MODIFICA PROFILO -->
   <div id="mod-profile-overlay" class="custom-overlay hidden">
-    <div class="overlay-content" id="modProfileContent">
+    <div class="overlay-content">
       <h3>Modifica Profilo</h3>
       <form id="modificaForm">
-        <input type="text" placeholder="Nome e Cognome" />
-        <input type="email" placeholder="Mail" />
-        <input type="password" placeholder="Password" />
-        <input type="password" placeholder="Ripeti Password" />
+        <input type="text" name="fullName" placeholder="Nome e Cognome" />
+        <input type="email" name="email" placeholder="Mail" />
+        <input type="password" name="password" placeholder="Password" />
+        <input type="password" name="passwordConfirm" placeholder="Ripeti Password" />
         <button type="submit" class="profile-edit-btn">Modifica Profilo</button>
         <button type="button" class="profile-delete-btn">Elimina Account</button>
       </form>
@@ -76,36 +66,25 @@
     </div>
   </div>
 
-  <!-- Overlay Le Spese mese -->
+  <!-- OVERLAY SPESE MESE -->
   <div id="spese-overlay" class="custom-overlay hidden">
-    <div class="overlay-content overlay-list" id="speseContent">
+    <div class="overlay-content overlay-list">
       <h3 id="titoloMese">Le Spese Di ...</h3>
-      <ul>
-        <li><span>Macdonald</span> <span>-100,00€</span></li>
-        <li><span>Macdonald</span> <span>-100,00€</span></li>
-        <li><span>Macdonald</span> <span>-100,00€</span></li>
-        <li><span>Macdonald</span> <span>-100,00€</span></li>
-        <li><span>Macdonald</span> <span>-100,00€</span></li>
-      </ul>
+      <ul id="speseList"></ul>
       <button class="overlay-close" onclick="closeOverlay('spese-overlay')">X</button>
     </div>
   </div>
 
-  <!-- Overlay Risparmi -->
+  <!-- OVERLAY RISPARMI -->
   <div id="risparmi-overlay" class="custom-overlay hidden">
-    <div class="overlay-content overlay-list" id="risparmiContent">
+    <div class="overlay-content overlay-list">
       <h3>I Tuoi Risparmi</h3>
-      <ul>
-        <li><span>Settembre</span> <span>+200,00€</span></li>
-        <li><span>Agosto</span> <span>+200,00€</span></li>
-        <li><span>Luglio</span> <span>+200,00€</span></li>
-        <li><span>Giugno</span> <span>+200,00€</span></li>
-        <li><span>Maggio</span> <span>+200,00€</span></li>
-      </ul>
+      <ul id="risparmiList"></ul>
       <button class="overlay-close" onclick="closeOverlay('risparmi-overlay')">X</button>
     </div>
   </div>
 
+  <!-- SCRIPT PROFILE -->
   <script src="profile.js"></script>
 </body>
 </html>

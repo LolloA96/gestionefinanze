@@ -1,20 +1,52 @@
-function closeOverlay(id) {
-  document.getElementById(id).classList.add('hidden');
-}
+// profile.js - gestione overlay profilo e spese
+document.addEventListener('DOMContentLoaded', () => {
+  const editProfileBtn = document.getElementById('editProfileBtn');
+  const overlays = ['mod-profile-overlay', 'spese-overlay', 'risparmi-overlay'];
 
-function openSpeseOverlay(mese) {
-  document.getElementById('spese-overlay').classList.remove('hidden');
-  document.getElementById('titoloMese').innerText = 'Le Spese Di ' + mese;
-}
+  /* -------------------------
+     Funzioni helper overlay
+     ------------------------- */
+  function closeOverlay(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  }
 
-document.getElementById('editProfileBtn').addEventListener('click', () => {
-  document.getElementById('mod-profile-overlay').classList.remove('hidden');
-});
+  function openOverlay(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  }
 
-// Chiudi overlay cliccando fuori dal box
-['mod-profile-overlay', 'spese-overlay', 'risparmi-overlay'].forEach(id => {
-  document.getElementById(id).addEventListener('mousedown', (e) => {
-    const box = e.currentTarget.querySelector('.overlay-content');
-    if (!box.contains(e.target)) e.currentTarget.classList.add('hidden');
+  function openSpeseOverlay(mese) {
+    const speseOverlay = document.getElementById('spese-overlay');
+    const titoloMese = document.getElementById('titoloMese');
+
+    if (speseOverlay) speseOverlay.classList.remove('hidden');
+    if (titoloMese) titoloMese.innerText = 'Le Spese di ' + mese;
+  }
+
+  /* -------------------------
+     Eventi overlay
+     ------------------------- */
+  editProfileBtn?.addEventListener('click', () => {
+    openOverlay('mod-profile-overlay');
   });
+
+  // Chiudi overlay cliccando fuori dal box
+  overlays.forEach(id => {
+    const overlay = document.getElementById(id);
+    if (!overlay) return;
+
+    overlay.addEventListener('mousedown', (e) => {
+      const box = overlay.querySelector('.overlay-content');
+      if (box && !box.contains(e.target)) {
+        overlay.classList.add('hidden');
+      }
+    });
+  });
+
+  /* -------------------------
+     Espongo funzioni globali
+     ------------------------- */
+  window.closeOverlay = closeOverlay;
+  window.openSpeseOverlay = openSpeseOverlay;
 });

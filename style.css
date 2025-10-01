@@ -1,3 +1,4 @@
+/* ========== RESET E BASE ========== */
 * {
   margin: 0;
   padding: 0;
@@ -6,23 +7,57 @@
 }
 
 body {
-  background: url('Img/sfondo.png') !important;
+  background: url('Img/sfondo.png') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
+  color: white;
   display: flex;
   flex-direction: column;
 }
 
-header {
+/* ========== HEADER ========== */
+header, .main-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem;
   background: transparent;
-  align-items: center;
 }
 
-.user-info {
+.user-info-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-text {
+  color: #bbb;
+  font-size: 1em;
+  margin-bottom: -2px;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 1.3em;
+  letter-spacing: 0.5px;
+  color: #FFF;
+}
+
+.profile-icon, .user-initial {
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.profile-icon {
+  background: #2a5be2;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1.1em;
 }
 
 .user-initial {
@@ -31,12 +66,12 @@ header {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  text-align: center;
   line-height: 36px;
   margin-right: 0.5rem;
-  font-weight: bold;
+  text-align: center;
 }
 
+/* ========== MAIN SECTIONS ========== */
 main {
   flex: 1;
   padding: 1rem;
@@ -65,10 +100,9 @@ main {
   background: #292929;
   padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #ffffff3a; /* FIX: ; aggiunto */
-  margin-bottom: 2rem;
+  border: 1px solid #ffffff3a;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .goal button {
@@ -97,24 +131,57 @@ main {
   border-bottom: 1px solid #444;
 }
 
+/* ========== BOTTOM NAV ========== */
 .bottom-nav {
-  background: #1f1f1f;
-  display: flex;
-  justify-content: space-around;
-  padding: 1rem 0;
   position: fixed;
-  bottom: 0;
-  width: 100%;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,30,40,0.98);
+  border-radius: 24px;
+  display: flex;
+  gap: 48px;
+  width: 90%;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 36px;
+  z-index: 10;
 }
 
-.bottom-nav button {
+.nav-item, .bottom-nav button {
   background: none;
   border: none;
-  color: #ddd;
-  font-size: 1.2rem;
+  color: #e6e6f7;
+  font-size: 2rem;
   cursor: pointer;
+  outline: none;
+  transition: color 0.2s;
 }
 
+/* ========== PULSANTI GENERALI ========== */
+.add-btn, .add-doc-btn {
+  background: #2068f0;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 14px #0c1b3840;
+}
+
+.add-doc-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 1.75em;
+  box-shadow: 0 3px 8px #2050be44;
+}
+
+/* ========== AUTH FORM ========== */
 .auth-container {
   max-width: 320px;
   margin: 56px auto;
@@ -122,7 +189,6 @@ main {
   padding: 24px;
   border-radius: 10px;
   color: white;
-  font-family: Arial, sans-serif;
 }
 
 .auth-container h2 {
@@ -181,159 +247,55 @@ main {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-p {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 15px;
-}
-
-body {
-  background-image: url('Img/sfondo.png') !important;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
-  min-height: 100vh;
-  color: white;
-}
-
-.bottom-nav {
+/* ========== OVERLAY ========== */
+.custom-overlay {
   position: fixed;
-  bottom: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(30,30,40,0.98);
-  border-radius: 24px;
-  display: flex;
-  gap: 48px;
-  width: 90%;
+  inset: 0;
+  background: rgba(30,30,30,0.63);
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  padding: 20px 36px 20px 36px;
-  z-index: 10;
+  z-index: 9999;
 }
 
-.nav-item {
-  border: none;
-  background: transparent;
-  color: #e6e6f7;
-  font-size: 2rem;
-  cursor: pointer;
-  outline: none;
-  transition: color 0.2s;
+.custom-overlay.hidden {
+  display: none !important;
 }
 
-.add-btn {
-  color: white;
-  background: #2068f0;
-  font-size: 2.3rem;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  box-shadow: 0 2px 14px #0c1b3840;
-  border: none;
-  margin-top: -24px;
-}
-
-/* ============ ALTRI OVERLAY (non obiettivo) ============ */
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(14, 19, 36, 0.75);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.overlay.hidden { display: none; }
-
-.over-box {
-  background: #22222c;
-  padding: 32px 24px 24px 24px;
-  border-radius: 17px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.over-tabs {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
-.over-tabs button {
-  background: #1e1e26;
-  border: none;
-  color: #8989a5;
-  padding: 7px 24px;
-  border-radius: 6px;
-  font-size: 1.05rem;
-  margin-top: 8px;
-  cursor: pointer;
-}
-
-.over-tabs .active {
-  background: #2068f0;
-  color: #fff;
-}
-
-.over-box input, .over-box button[type="submit"] {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  border-radius: 7px;
-  height: 42px;
-  border: none;
-  padding: 0 12px;
-  font-size: 1.1rem;
-}
-
-.over-box button[type="submit"] {
-  background: #2068f0;
-  color: #fff;
-  font-weight: 700;
-  margin-top: 14px;
-  cursor: pointer;
-}
-
-.close-over {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  color: #c8c8ea;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* ============ OVERLAY ENTRATE/USCITE (già esistente) ============ */
 .overlay__content {
   background: #212124;
+  color: #fff;
   border-radius: 24px;
-  padding: 28px 24px 32px 24px;
+  padding: 28px 24px 32px;
   width: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  box-shadow: 0px 5px 32px #0002;
+  max-width: 96vw;
+  box-shadow: 0 5px 32px #0006;
   position: relative;
 }
 
+/* Overlay close button */
+.overlay-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+/* Overlay tabs */
 .overlay__tabs {
   display: flex;
   gap: 12px;
   justify-content: center;
   margin-bottom: 30px;
 }
+
 .tab-btn {
   background: none;
   border: 2px solid #484868;
@@ -344,12 +306,14 @@ body {
   transition: all 0.2s;
   font-size: 1rem;
 }
+
 .tab-btn.active {
   background: #2966e6;
   color: white;
   border-color: #2966e6;
   font-weight: bold;
 }
+
 #overlayForm input,
 #overlayForm textarea {
   margin-bottom: 13px;
@@ -362,40 +326,26 @@ body {
   width: 100%;
   resize: none;
 }
+
 #overlayForm textarea { min-height: 56px; }
 #overlayForm input::placeholder,
-#overlayForm textarea::placeholder { color: #9597a3;}
-.add-btn {
-  background: #2966e6;
-  color: #fff;
-  font-size: 1.18em;
-  font-weight: bold;
-  border: none;
-  border-radius: 9px;
-  padding: 11px 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 9px;
-  margin-top: 13px;
-  width: 100%;
-}
+#overlayForm textarea::placeholder { color: #9597a3; }
 
-/* ============ PROFILO, DOCUMENTI, ecc. (invariati) ============ */
-.profile-main {
+/* ========== PROFILE E DOCUMENTI ========== */
+.profile-main, .docs-main {
   max-width: 410px;
   margin: 34px auto 100px auto;
-  background: transparent;
   color: #f7f7f9;
   font-family: Arial, sans-serif;
 }
-.profile-header {
+
+.profile-header, .docs-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 18px;
   margin-bottom: 32px;
 }
+
 .profile-pic {
   width: 60px;
   height: 60px;
@@ -408,7 +358,7 @@ body {
   justify-content: center;
   font-weight: bold;
 }
-.profile-info { flex: 1; }
+
 .profile-name {
   font-size: 1.33em;
   font-weight: bold;
@@ -416,6 +366,7 @@ body {
   align-items: center;
   gap: 10px;
 }
+
 .edit-profile {
   background: none;
   border: none;
@@ -423,11 +374,13 @@ body {
   font-size: 1.1em;
   cursor: pointer;
 }
+
 .profile-stats-row {
   display: flex;
   gap: 12px;
   margin-top: 11px;
 }
+
 .profile-stats-card {
   background: #212234;
   border-radius: 13px;
@@ -437,11 +390,13 @@ body {
   align-items: flex-start;
   min-width: 95px;
 }
+
 .profile-amount {
   font-size: 1.19em;
   margin-top: 5px;
   font-weight: bold;
 }
+
 .profile-progress-bar {
   height: 8px;
   width: 86px;
@@ -449,29 +404,33 @@ body {
   border-radius: 6px;
   margin-top: 8px;
 }
+
 .profile-progress {
   height: 100%;
   background: #247fff;
   border-radius: 6px;
 }
-.profile-expenses { margin-top: 32px; }
+
 .spese-mensili {
   display: flex;
   flex-direction: column;
   gap: 22px;
   margin-top: 19px;
 }
+
 .mese-spese {
   background: #23243a;
   border-radius: 15px;
-  padding: 18px 13px 13px 13px;
+  padding: 18px 13px 13px;
   display: flex;
   align-items: center;
   gap: 15px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .cifra-mese { font-size: 1.18em; font-weight: bold; }
+
 .btn-mese {
   background: #3776ed;
   color: #fff;
@@ -479,44 +438,10 @@ body {
   border-radius: 7px;
   padding: 5px 15px;
   font-weight: bold;
-  margin-left: 12px;
   cursor: pointer;
   font-size: 1em;
 }
 
-.docs-main {
-  max-width: 390px;
-  margin: 36px auto 110px auto;
-  color: #f1f6fb;
-}
-.docs-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 22px;
-}
-.docs-header h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin: 0;
-}
-.add-doc-btn {
-  background: #2869f6;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.75em;
-  width: 44px;
-  height: 44px;
-  line-height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  box-shadow: 0 3px 8px #2050be44;
-  cursor: pointer;
-}
-.docs-list-section { }
 .docs-list {
   list-style: none;
   padding: 0;
@@ -525,6 +450,7 @@ body {
   flex-direction: column;
   gap: 13px;
 }
+
 .docs-item {
   background: rgba(64,65,94,0.22);
   border-radius: 16px;
@@ -536,6 +462,7 @@ body {
   box-shadow: 0 2.5px 8px #1010260a;
   transition: background 0.18s;
 }
+
 .icon-btn {
   background: #2352c7;
   border: none;
@@ -550,90 +477,11 @@ body {
   font-size: 1.35em;
   transition: background 0.19s;
 }
-.icon-btn:hover {
-  background: #1c3e7b;
-}
 
-/* HEADER */
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 50px 24px 50px 24px;
-}
-.user-info-left {
-  display: flex;
-  flex-direction: column;
-}
-.welcome-text {
-  color: #bbb;
-  font-size: 1em;
-  margin-bottom: -2px;
-}
-.user-name {
-  font-weight: 600;
-  font-size: 1.3em;
-  letter-spacing: 0.5px;
-  color: #FFF;
-}
-.profile-icon {
-  background: #2a5be2;
-  color: #fff;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-}
+.icon-btn:hover { background: #1c3e7b; }
 
-/* Overlay obiettivo: visibile quando NON ha .hidden */
-.custom-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(30,30,30,0.63);
-  display: flex !important;        /* visibile quando aperto */
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;                   /* sopra a tutto */
-}
-
-/* Overlay obiettivo chiuso */
-.custom-overlay.hidden {
-  display: none !important;        /* davvero nascosto */
-}
-
-/* Contenitore interno dell’overlay */
-.overlay__content {
-  background: #212124;
-  color: #fff;
-  border-radius: 24px;
-  padding: 28px 24px 32px;
-  width: 360px;
-  max-width: 96vw;
-  box-shadow: 0 5px 32px #0006;
-  position: relative;
-  opacity: 1;                      /* evita opacità 0 da altre regole */
-  transform: translateY(0);        /* evita che sia fuori schermo */
-}
-
-.overlay-close {
-  position: absolute;
-  top: 17px;
-  right: 16px;
-  background: transparent;
-  color: #fff;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-}
-
-/* Responsivo */
+/* ========== RESPONSIVO ========== */
 @media (max-width: 500px) {
-  .profile-main { max-width: 98vw; }
+  .profile-main, .docs-main { max-width: 98vw; }
   .overlay__content { max-width: 96vw; }
 }
