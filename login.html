@@ -6,58 +6,55 @@
   <title>Autenticazione - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="hidden">
+<body>
   <main class="auth-container">
     <h2 id="authTitle">Iscriviti Ora</h2>
 
-  <!-- =======================
-     LOGIN FORM
-======================= -->
-<div id="loginForm">
-  <h2>Accedi</h2>
-  <form>
-    <label for="loginUser">Email o Username:</label>
-    <input type="text" id="loginUser" name="loginUser" placeholder="Inserisci email o username" required />
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <h2>Accedi</h2>
+      <form>
+        <label for="loginUser">Email o Username:</label>
+        <input type="text" id="loginUser" name="loginUser" placeholder="Inserisci email o username" required />
 
-    <label for="loginPassword">Password:</label>
-    <input type="password" id="loginPassword" name="loginPassword" placeholder="Inserisci password" required />
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="loginPassword" placeholder="Inserisci password" required />
 
-    <button type="submit">Login</button>
-  </form>
+        <button type="submit">Login</button>
+      </form>
 
-  <p>Non hai un account? 
-    <button id="goSignUp" type="button">Registrati</button>
-  </p>
-</div>
+      <p>Non hai un account? 
+        <button id="goSignUp" type="button">Registrati</button>
+      </p>
+    </div>
 
-<!-- =======================
-     SIGNUP FORM
-======================= -->
-<div id="signupForm" class="hidden">
-  <h2>Registrati</h2>
-  <form>
-    <label for="signupUser">Username:</label>
-    <input type="text" id="signupUser" name="signupUser" placeholder="Scegli un nome utente" required />
+    <!-- SIGNUP FORM -->
+    <div id="signupForm" class="hidden">
+      <h2>Registrati</h2>
+      <form>
+        <label for="signupUser">Username:</label>
+        <input type="text" id="signupUser" name="signupUser" placeholder="Scegli un nome utente" required />
 
-    <label for="signupEmail">Email:</label>
-    <input type="email" id="signupEmail" name="signupEmail" placeholder="Inserisci email" required />
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" name="signupEmail" placeholder="Inserisci email" required />
 
-    <label for="signupPassword">Password:</label>
-    <input type="password" id="signupPassword" name="signupPassword" placeholder="Crea una password" required />
+        <label for="signupPassword">Password:</label>
+        <input type="password" id="signupPassword" name="signupPassword" placeholder="Crea una password" required />
 
-    <button type="submit">Registrati</button>
-  </form>
+        <button type="submit">Registrati</button>
+      </form>
 
-  <p>Hai già un account? 
-    <button id="goLogin" type="button">Accedi</button>
-  </p>
-</div>
+      <p>Hai già un account? 
+        <button id="goLogin" type="button">Accedi</button>
+      </p>
+    </div>
+  </main>
+
   <!-- FIREBASE + LOGICA AUTH -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-    // Config Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
       authDomain: "gestione-finanze-95e06.firebaseapp.com",
@@ -73,7 +70,7 @@
 
     // Redirect se già loggato
     onAuthStateChanged(auth, (user) => {
-      if (user && !location.pathname.endsWith('index.html')) {
+      if (user) {
         window.location.href = 'index.html';
       }
     });
@@ -101,18 +98,13 @@
     // SIGN UP SUBMIT
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('signupName').value.trim();
-      const surname = document.getElementById('signupSurname').value.trim();
       const username = document.getElementById('signupUser').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        const displayName = name && surname ? `${name} ${surname}` : (username || name || '');
-        if (displayName) {
-          await updateProfile(cred.user, { displayName });
-        }
+        if (username) await updateProfile(cred.user, { displayName: username });
         window.location.href = 'index.html';
       } catch (err) {
         alert(err.message);

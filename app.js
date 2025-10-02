@@ -1,4 +1,4 @@
-// app.js - versione completa con Firebase Auth
+// app.js - versione definitiva con Firebase Auth e bottoni funzionanti
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
@@ -19,20 +19,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // -------------------------
-// Auth Guard
+// Mostra pagina solo se loggato
 // -------------------------
+document.body.classList.add('hidden'); // nascondi body fino a controllo auth
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    if (!location.pathname.endsWith('login.html')) {
-      window.location.href = 'login.html';
-    }
+    window.location.href = 'login.html';
   } else {
-    // Salva nome/email in localStorage se non presente
-      document.body.classList.remove('hidden');
+    document.body.classList.remove('hidden');
     if (!localStorage.getItem('gf_user_name')) {
       localStorage.setItem('gf_user_name', user.displayName || user.email);
     }
-    initApp(); // avvia la tua webapp
+    document.addEventListener('DOMContentLoaded', initApp);
   }
 });
 
@@ -40,25 +39,16 @@ onAuthStateChanged(auth, (user) => {
 // Funzione principale
 // -------------------------
 function initApp() {
-
-  /* -------------------------
-     Helpers
-     ------------------------- */
   const qs = id => document.getElementById(id);
   const safeAdd = (el, ev, fn) => el?.addEventListener(ev, fn);
-
   const parseAmount = str => {
     if (!str) return 0;
     const cleaned = String(str).replace(/€/g,'').replace(/\s/g,'').replace(/\./g,'').replace(',', '.');
     const v = parseFloat(cleaned);
     return Number.isFinite(v)?v:0;
   };
-
   const formatEuro = num => Number(num).toFixed(2) + '€';
 
-  /* -------------------------
-     LocalStorage Keys & Monthly Reset
-     ------------------------- */
   const LS = {
     income: 'gf_income',
     expenses: 'gf_expenses',
@@ -69,11 +59,11 @@ function initApp() {
     userName: 'gf_user_name'
   };
 
+  // reset mensile
   const getCurrentMonthKey = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
   };
-
   const checkMonthlyReset = () => {
     const current = getCurrentMonthKey();
     const last = localStorage.getItem(LS.lastMonth);
@@ -89,9 +79,9 @@ function initApp() {
   };
   checkMonthlyReset();
 
-  /* -------------------------
-     State & UI Elements
-     ------------------------- */
+  // -------------------------
+  // Stato e riferimenti DOM
+  // -------------------------
   let income = parseAmount(localStorage.getItem(LS.income));
   let expensesData = JSON.parse(localStorage.getItem(LS.expenses)||'[]');
   let savings = parseAmount(localStorage.getItem(LS.savings));
@@ -115,9 +105,9 @@ function initApp() {
   const addGoalForm = qs('addGoalForm');
   const goalList = qs('goalList');
 
-  /* -------------------------
-     Initial UI
-     ------------------------- */
+  // -------------------------
+  // UI iniziale
+  // -------------------------
   if (userNameElem && profileIcon) {
     const userName = localStorage.getItem(LS.userName) || 'Utente';
     userNameElem.textContent = userName;
@@ -125,14 +115,14 @@ function initApp() {
     safeAdd(profileIcon,'click',()=>window.location.href='profile.html');
   }
 
-  /* -------------------------
-     Render Functions
-     ------------------------- */
+  // -------------------------
+  // Render
+  // -------------------------
   const renderExpenses = () => {
     if(!expensesList) return;
     expensesList.innerHTML='';
     if(!expensesData.length){
-      const li = document.createElement('li');
+      const li=document.createElement('li');
       li.textContent='Nessuna spesa per questo mese';
       expensesList.appendChild(li);
       return;
@@ -149,7 +139,6 @@ function initApp() {
   const getGoals = () => {
     try{ return JSON.parse(localStorage.getItem(LS.goals))||[]; } catch { return []; }
   };
-
   const renderGoals = () => {
     if(!goalList) return;
     const goals = getGoals();
@@ -191,9 +180,9 @@ function initApp() {
     renderSummary();
   };
 
-  /* -------------------------
-     Overlay Helpers
-     ------------------------- */
+  // -------------------------
+  // Overlay helpers
+  // -------------------------
   const openOverlay = el => el?.classList.remove('hidden');
   const closeOverlay = el => el?.classList.add('hidden');
   const overlayOutsideClose = (overlayEl,innerSelector='.overlay-content') => {
@@ -204,9 +193,9 @@ function initApp() {
     });
   };
 
-  /* -------------------------
-     Entrate/Uscite Overlay
-     ------------------------- */
+  // -------------------------
+  // Entrate/Uscite Overlay
+  // -------------------------
   if(openOverlayBtn && overlay && overlayContent && overlayForm){
     safeAdd(openOverlayBtn,'click',()=>{
       tabEntrata?.classList.add('active');
@@ -243,9 +232,9 @@ function initApp() {
     });
   }
 
-  /* -------------------------
-     Goals Overlay
-     ------------------------- */
+  // -------------------------
+  // Goals overlay
+  // -------------------------
   if(addGoalBtn && goalOverlay && closeGoalOverlay && addGoalForm){
     safeAdd(addGoalBtn,'click',()=>openOverlay(goalOverlay));
     safeAdd(closeGoalOverlay,'click',()=>closeOverlay(goalOverlay));
@@ -264,9 +253,9 @@ function initApp() {
     });
   }
 
-  /* -------------------------
-     Global functions
-     ------------------------- */
+  // -------------------------
+  // Global functions
+  // -------------------------
   window.openSpeseOverlay=mese=>{
     const el=qs('spese-overlay');
     const titolo=qs('titoloMese');
@@ -281,9 +270,9 @@ function initApp() {
     if(el) closeOverlay(el);
   };
 
-  /* -------------------------
-     Init Render
-     ------------------------- */
+  // -------------------------
+  // Init render
+  // -------------------------
   renderSummary();
 
   window._GF={reload:()=>{
