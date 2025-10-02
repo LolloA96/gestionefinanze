@@ -160,18 +160,18 @@ main {
 
 /* ========== PULSANTI GENERALI ========== */
 .add-btn, .add-doc-btn {
-  background: #2068f0;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 54px;
-  height: 54px;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 14px #0c1b3840;
+     background: #2068f0;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    height: 54px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 14px #0c1b3840;
 }
 
 .add-doc-btn {

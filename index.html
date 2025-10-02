@@ -31,9 +31,12 @@
       </div>
     </section>
 
+    <!-- SEZIONE OBIETTIVI -->
     <section class="goal">
-      <h4>Obiettivo da Raggiungere</h4>
+      <h4>Obiettivi da Raggiungere</h4>
       <button id="addGoalBtn">Aggiungi obiettivo</button>
+      <!-- 🔹 LISTA OBIETTIVI -->
+      <ul id="goalList"></ul>
     </section>
 
     <section class="monthly-expenses">
@@ -77,11 +80,10 @@
   <div id="goalOverlay" class="custom-overlay hidden" aria-hidden="true">
     <div class="overlay__content" role="dialog" aria-modal="true">
       <button class="overlay-close" id="closeGoalOverlay" aria-label="Chiudi">&times;</button>
-      <form id="goalForm">
-        <label for="goalAmount">Quantità Obiettivo</label>
-        <input type="number" id="goalAmount" name="goalAmount" placeholder="Inserisci quantità" required />
-        <label for="goalDeadline">Scadenza</label>
-        <input type="text" id="goalDeadline" name="goalDeadline" placeholder="Esempio: dicembre" />
+      <!-- 🔹 FORM ALLINEATO CON app.js -->
+      <form id="addGoalForm">
+        <label for="goalInput">Nuovo Obiettivo</label>
+        <input type="text" id="goalInput" name="goalInput" placeholder="Es. Risparmiare 500€" required />
         <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
       </form>
     </div>
