@@ -28,6 +28,7 @@ onAuthStateChanged(auth, (user) => {
     }
   } else {
     // Salva nome/email in localStorage se non presente
+      document.body.classList.remove('hidden');
     if (!localStorage.getItem('gf_user_name')) {
       localStorage.setItem('gf_user_name', user.displayName || user.email);
     }

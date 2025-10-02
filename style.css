@@ -6,6 +6,10 @@
   font-family: Arial, sans-serif;
 }
 
+body.hidden {
+  display: none;
+}
+
 body {
   background: url('Img/sfondo.png') no-repeat center center fixed;
   background-size: cover;
