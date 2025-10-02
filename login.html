@@ -10,42 +10,48 @@
   <main class="auth-container">
     <h2 id="authTitle">Iscriviti Ora</h2>
 
-    <!-- SIGN UP -->
-    <form id="signupForm" class="auth-form">
-      <label for="signupName">Nome</label>
-      <input type="text" id="signupName" name="signupName" required />
+  <!-- =======================
+     LOGIN FORM
+======================= -->
+<div id="loginForm">
+  <h2>Accedi</h2>
+  <form>
+    <label for="loginUser">Email o Username:</label>
+    <input type="text" id="loginUser" name="loginUser" placeholder="Inserisci email o username" required />
 
-      <label for="signupSurname">Cognome</label>
-      <input type="text" id="signupSurname" name="signupSurname" required />
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" name="loginPassword" placeholder="Inserisci password" required />
 
-      <label for="signupUser">Username</label>
-      <input type="text" id="signupUser" name="signupUser" required />
+    <button type="submit">Login</button>
+  </form>
 
-      <label for="signupEmail">Email</label>
-      <input type="email" id="signupEmail" name="signupEmail" required />
+  <p>Non hai un account? 
+    <button id="goSignUp" type="button">Registrati</button>
+  </p>
+</div>
 
-      <label for="signupPassword">Password</label>
-      <input type="password" id="signupPassword" name="signupPassword" required />
+<!-- =======================
+     SIGNUP FORM
+======================= -->
+<div id="signupForm" class="hidden">
+  <h2>Registrati</h2>
+  <form>
+    <label for="signupUser">Username:</label>
+    <input type="text" id="signupUser" name="signupUser" placeholder="Scegli un nome utente" required />
 
-      <button type="submit">Registrati Ora</button>
-      <p>Hai già un account? <button id="goLogin" type="button" class="link-button">Accedi</button></p>
-    </form>
+    <label for="signupEmail">Email:</label>
+    <input type="email" id="signupEmail" name="signupEmail" placeholder="Inserisci email" required />
 
-    <!-- LOGIN -->
-    <form id="loginForm" class="auth-form hidden">
-      <h2>Accedi</h2>
+    <label for="signupPassword">Password:</label>
+    <input type="password" id="signupPassword" name="signupPassword" placeholder="Crea una password" required />
 
-      <label for="loginUser">Email</label>
-      <input type="email" id="loginUser" name="loginUser" required />
+    <button type="submit">Registrati</button>
+  </form>
 
-      <label for="loginPassword">Password</label>
-      <input type="password" id="loginPassword" name="loginPassword" required />
-
-      <button type="submit">Accedi</button>
-      <p><button id="goSignUp" type="button" class="link-button">Non hai un account? Iscriviti</button></p>
-    </form>
-  </main>
-
+  <p>Hai già un account? 
+    <button id="goLogin" type="button">Accedi</button>
+  </p>
+</div>
   <!-- FIREBASE + LOGICA AUTH -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";

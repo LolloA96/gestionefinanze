@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
      Initial UI population
      ------------------------- */
   if (userNameElem && profileIcon) {
-    const userName = localStorage.getItem('gf_user_name') || 'Lorenzo';
+    const userName = localStorage.getItem('gf_user_name') || 'Utente';
     userNameElem.textContent = userName;
     profileIcon.textContent = userName.charAt(0).toUpperCase();
     profileIcon?.addEventListener('click', () => {

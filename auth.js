@@ -59,15 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = signupForm.signupEmail?.value || '';
       const password = signupForm.signupPassword?.value || '';
+      const username = signupForm.signupUser?.value || ''; // nuovo campo "nome utente"
 
-      if (!email || !password) {
-        alert('Inserisci email e password');
+      if (!email || !password || !username) {
+        alert('Inserisci nome, email e password');
         return;
       }
 
       createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user;
+
+          // Salva l'username scelto in localStorage
+          localStorage.setItem('gf_user_name', username);
+          localStorage.setItem('gf_user_email', email);
+
           alert('✅ Registrazione effettuata con successo!');
           signupForm.reset();
           signupForm.classList.add('hidden');
@@ -95,9 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       signInWithEmailAndPassword(auth, emailOrUser, password)
         .then(userCredential => {
+          const user = userCredential.user;
+
+          // Salva nome ed email (se esiste già in localStorage rimane)
+          if (emailOrUser.includes('@')) {
+            localStorage.setItem('gf_user_email', emailOrUser);
+          }
+          // Manteniamo almeno il campo gf_user_name per la home
+          if (!localStorage.getItem('gf_user_name')) {
+            localStorage.setItem('gf_user_name', emailOrUser.split('@')[0]);
+          }
+
           alert('✅ Accesso effettuato!');
           loginForm.reset();
-          // redirect alla home
           window.location.href = 'index.html';
         })
         .catch(error => {
@@ -111,10 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
      ------------------------- */
   onAuthStateChanged(auth, user => {
     if (user) {
-      // Utente loggato
       console.log("User loggato:", user.email);
       localStorage.setItem('gf_user_email', user.email || '');
-      // Puoi anche salvare displayName o uid se ti serve
     } else {
       console.log("Nessun utente loggato.");
       localStorage.removeItem('gf_user_email');
