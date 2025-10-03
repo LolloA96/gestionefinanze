@@ -6,7 +6,7 @@
   <title>Home - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="hidden">
+<body>
   <div class="bg-overlay"></div>
 
   <!-- HEADER -->
@@ -33,7 +33,7 @@
 
     <section class="goal">
       <h4>Obiettivi da Raggiungere</h4>
-      <button id="addGoalBtn" class="btn-outline">Aggiungi obiettivo</button>
+      <button id="addGoalBtn" class="btn-outline" type="button">Aggiungi obiettivo</button>
       <ul id="goalList" class="list"></ul>
     </section>
 
@@ -48,7 +48,7 @@
     <a href="index.html" class="nav-item" aria-label="Home">
       <img src="Asset/Home.svg" alt="Home" width="24" height="24" />
     </a>
-    <button id="openOverlay" class="nav-add" aria-label="Aggiungi voce">
+    <button id="openOverlay" class="nav-add" type="button" aria-label="Aggiungi voce">
       <img src="Asset/Plus.svg" alt="Aggiungi" width="24" height="24" />
     </button>
     <a href="Document.html" class="nav-item" aria-label="Documenti">
@@ -68,8 +68,6 @@
         <input type="text" name="desc" placeholder="Nome (es. Affitto)" required />
         <input type="number" name="amount" placeholder="Quantità" step="0.01" required />
         <textarea name="notes" placeholder="Note (opzionale)"></textarea>
-
-        <!-- Bottom primary button (come nel mockup: blu e fisso in basso overlay) -->
         <div class="overlay-actions">
           <button type="submit" class="btn-primary big">Aggiungi ora</button>
         </div>
@@ -80,7 +78,7 @@
   <!-- OVERLAY OBIETTIVO -->
   <div id="goalOverlay" class="custom-overlay hidden" aria-hidden="true">
     <div class="overlay__content" role="dialog" aria-modal="true">
-      <button class="overlay-close" id="closeGoalOverlay" aria-label="Chiudi">&times;</button>
+      <button class="overlay-close" id="closeGoalOverlay" type="button" aria-label="Chiudi">&times;</button>
       <form id="addGoalForm" class="overlay-form">
         <label for="goalInput">Nuovo Obiettivo</label>
         <input id="goalInput" name="goalInput" type="text" placeholder="Es. Risparmiare 500€" required />
@@ -92,26 +90,26 @@
     </div>
   </div>
 
-  <!-- PROFILE / SPESA / RISPARMI OVERLAYS (aperti da profile.html o bottoni) -->
-  <div id="mod-profile-overlay" class="custom-overlay hidden">
-    <div class="overlay-content">
-      <button onclick="closeOverlay('mod-profile-overlay')">&times;</button>
+  <!-- PROFILE / SPESA / RISPARMI OVERLAYS -->
+  <div id="mod-profile-overlay" class="custom-overlay hidden" aria-hidden="true">
+    <div class="overlay-content" role="dialog" aria-modal="true">
+      <button type="button" onclick="closeOverlay('mod-profile-overlay')" aria-label="Chiudi">&times;</button>
       <input type="text" id="profileNome" name="nome" placeholder="Nome">
       <input type="text" id="profileCognome" name="cognome" placeholder="Cognome">
       <input type="email" id="profileEmail" name="email" placeholder="Email">
-      <button id="saveProfileBtn" class="btn-primary">Salva</button>
+      <button id="saveProfileBtn" class="btn-primary" type="button">Salva</button>
     </div>
   </div>
 
-  <div id="spese-overlay" class="custom-overlay hidden">
-    <div class="overlay-content">
+  <div id="spese-overlay" class="custom-overlay hidden" aria-hidden="true">
+    <div class="overlay-content" role="dialog" aria-modal="true">
       <h2 id="titoloMese">Le Spese</h2>
       <ul id="speseList" class="list"></ul>
     </div>
   </div>
 
-  <div id="risparmi-overlay" class="custom-overlay hidden">
-    <div class="overlay-content">
+  <div id="risparmi-overlay" class="custom-overlay hidden" aria-hidden="true">
+    <div class="overlay-content" role="dialog" aria-modal="true">
       <ul id="risparmiList" class="list"></ul>
     </div>
   </div>
