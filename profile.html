@@ -1,90 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Profilo - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="hidden">
+  <header class="main-header">
+    <div class="user-info-left">
+      <span class="welcome-text">Profilo</span>
+    </div>
+    <div class="profile-icon" id="profileIconProfile" tabindex="0">L</div>
+  </header>
+
   <main class="profile-main">
-    <section class="profile-header">
-      <div class="profile-pic" id="profileIcon">L</div>
-      <div class="profile-info">
-        <span class="profile-name">Lorenzo Anfora 
-          <button class="edit-profile" id="editProfileBtn">&#9998;</button>
-        </span>
-        <div class="profile-stats-row">
-          <div class="profile-stats-card">
-            <span>Risparmi Totali</span>
-            <span class="profile-amount" id="totalSavings">0,00€</span>
-          </div>
-          <div class="profile-stats-card">
-            <span>Obiettivo</span>
-            <div class="profile-progress-bar">
-              <div class="profile-progress" id="goalProgress" style="width:0%"></div>
-            </div>
-          </div>
-        </div>
+    <section class="profile-card">
+      <div class="avatar-large" id="profileInitial">L</div>
+      <h2 id="profileFullName">Lorenzo Anfora</h2>
+      <p id="profileEmail">email@example.com</p>
+      <div class="profile-stats">
+        <div class="stat"><small>Entrate totali</small><strong id="profileTotalIncome">0,00€</strong></div>
+        <div class="stat"><small>Risparmi complessivi</small><strong id="profileCumulative">0,00€</strong></div>
       </div>
+      <button id="editProfileBtn" class="btn-outline">Modifica Profilo</button>
+      <button id="logoutBtn" class="btn-link">Esci</button>
     </section>
 
-    <section class="profile-expenses">
-      <h3>Le Tue Spese</h3>
-      <div class="spese-mensili" id="monthlyExpenses">
-        <!-- Popolato dinamicamente dal JS -->
-      </div>
+    <section class="profile-lists">
+      <h3>Le tue spese mese per mese</h3>
+      <ul id="profileExpensesList" class="list"></ul>
+
+      <h3>I tuoi risparmi</h3>
+      <ul id="profileSavingsList" class="list"></ul>
     </section>
   </main>
 
-  <!-- NAV BOTTOM -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <img src="Asset/Home.svg" alt="Home icon" width="24" height="24">
-    </a>
-    <button id="openOverlay" class="nav-add">
-      <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24">
-    </button>
-    <a href="Document.html" class="nav-item">
-      <img src="Asset/File.svg" alt="File icon" width="24" height="24">
-    </a>
-  </nav>
-
-  <!-- OVERLAY MODIFICA PROFILO -->
-  <div id="mod-profile-overlay" class="custom-overlay hidden">
+  <!-- MODIFICA PROFILO OVERLAY -->
+  <div id="editProfileOverlay" class="custom-overlay hidden">
     <div class="overlay-content">
-      <h3>Modifica Profilo</h3>
-      <form id="modificaForm">
-        <input type="text" name="fullName" placeholder="Nome e Cognome" />
-        <input type="email" name="email" placeholder="Mail" />
-        <input type="password" name="password" placeholder="Password" />
-        <input type="password" name="passwordConfirm" placeholder="Ripeti Password" />
-        <button type="submit" class="profile-edit-btn">Modifica Profilo</button>
-        <button type="button" class="profile-delete-btn">Elimina Account</button>
+      <button id="closeEditProfile" aria-label="Chiudi">&times;</button>
+      <form id="editProfileForm" class="overlay-form">
+        <label for="editFirstName">Nome</label>
+        <input id="editFirstName" name="firstName" />
+        <label for="editLastName">Cognome</label>
+        <input id="editLastName" name="lastName" />
+        <label for="editEmail">Email</label>
+        <input id="editEmail" name="email" type="email" />
+        <div class="overlay-actions">
+          <button type="submit" class="btn-primary big">Salva</button>
+        </div>
       </form>
-      <button class="overlay-close" onclick="closeOverlay('mod-profile-overlay')">X</button>
     </div>
   </div>
 
-  <!-- OVERLAY SPESE MESE -->
-  <div id="spese-overlay" class="custom-overlay hidden">
-    <div class="overlay-content overlay-list">
-      <h3 id="titoloMese">Le Spese Di ...</h3>
-      <ul id="speseList"></ul>
-      <button class="overlay-close" onclick="closeOverlay('spese-overlay')">X</button>
-    </div>
-  </div>
-
-  <!-- OVERLAY RISPARMI -->
-  <div id="risparmi-overlay" class="custom-overlay hidden">
-    <div class="overlay-content overlay-list">
-      <h3>I Tuoi Risparmi</h3>
-      <ul id="risparmiList"></ul>
-      <button class="overlay-close" onclick="closeOverlay('risparmi-overlay')">X</button>
-    </div>
-  </div>
-
-  <!-- SCRIPT PROFILE -->
-  <script src="profile.js"></script>
+  <script type="module" src="profile.js"></script>
 </body>
 </html>

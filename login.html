@@ -1,131 +1,47 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Autenticazione - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="auth-container">
-    <h2 id="authTitle">Iscriviti Ora</h2>
+    <header class="auth-header">
+      <h1 id="authTitle">Iscriviti Ora</h1>
+    </header>
 
-    <!-- LOGIN FORM -->
-    <div id="loginForm">
+    <!-- LOGIN -->
+    <section id="loginForm" class="auth-panel">
       <h2>Accedi</h2>
-      <form>
-        <label for="loginUser">Email o Username:</label>
-        <input type="text" id="loginUser" name="loginUser" placeholder="Inserisci email o username" required />
-
-        <label for="loginPassword">Password:</label>
-        <input type="password" id="loginPassword" name="loginPassword" placeholder="Inserisci password" required />
-
-        <button type="submit">Login</button>
+      <form id="formLogin">
+        <label for="loginUser">Email o Username</label>
+        <input id="loginUser" name="loginUser" type="text" placeholder="Inserisci email o username" required />
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" name="loginPassword" type="password" placeholder="Inserisci password" required />
+        <button type="submit" class="btn-primary">Accedi</button>
       </form>
+      <p class="small">Non hai un account? <button id="goSignUp" class="link-btn">Registrati</button></p>
+    </section>
 
-      <p>Non hai un account? 
-        <button id="goSignUp" type="button">Registrati</button>
-      </p>
-    </div>
-
-    <!-- SIGNUP FORM -->
-    <div id="signupForm" class="hidden">
+    <!-- SIGNUP -->
+    <section id="signupForm" class="auth-panel hidden">
       <h2>Registrati</h2>
-      <form>
-        <label for="signupUser">Username:</label>
-        <input type="text" id="signupUser" name="signupUser" placeholder="Scegli un nome utente" required />
-
-        <label for="signupEmail">Email:</label>
-        <input type="email" id="signupEmail" name="signupEmail" placeholder="Inserisci email" required />
-
-        <label for="signupPassword">Password:</label>
-        <input type="password" id="signupPassword" name="signupPassword" placeholder="Crea una password" required />
-
-        <button type="submit">Registrati</button>
+      <form id="formSignup">
+        <label for="signupUser">Username</label>
+        <input id="signupUser" name="signupUser" type="text" placeholder="Scegli un nome utente" required />
+        <label for="signupEmail">Email</label>
+        <input id="signupEmail" name="signupEmail" type="email" placeholder="Inserisci email" required />
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" name="signupPassword" type="password" placeholder="Crea una password" required />
+        <button type="submit" class="btn-primary">Iscriviti</button>
       </form>
-
-      <p>Hai già un account? 
-        <button id="goLogin" type="button">Accedi</button>
-      </p>
-    </div>
+      <p class="small">Hai già un account? <button id="goLogin" class="link-btn">Accedi</button></p>
+    </section>
   </main>
 
-  <!-- FIREBASE + LOGICA AUTH -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
-      authDomain: "gestione-finanze-95e06.firebaseapp.com",
-      projectId: "gestione-finanze-95e06",
-      storageBucket: "gestione-finanze-95e06.appspot.com",
-      messagingSenderId: "229873840755",
-      appId: "1:229873840755:web:5fe74e3199082d72f07006",
-      measurementId: "G-QJH7V53NKJ"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Redirect se già loggato
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = 'index.html';
-      }
-    });
-
-    // ELEMENTI DOM
-    const authTitle = document.getElementById('authTitle');
-    const signupForm = document.getElementById('signupForm');
-    const loginForm = document.getElementById('loginForm');
-    const goLogin = document.getElementById('goLogin');
-    const goSignUp = document.getElementById('goSignUp');
-
-    // SWITCH UI
-    goLogin.addEventListener('click', () => {
-      signupForm.classList.add('hidden');
-      loginForm.classList.remove('hidden');
-      authTitle.textContent = 'Accedi';
-    });
-
-    goSignUp.addEventListener('click', () => {
-      loginForm.classList.add('hidden');
-      signupForm.classList.remove('hidden');
-      authTitle.textContent = 'Iscriviti Ora';
-    });
-
-    // SIGN UP SUBMIT
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('signupUser').value.trim();
-      const email = document.getElementById('signupEmail').value.trim();
-      const password = document.getElementById('signupPassword').value;
-
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        if (username) await updateProfile(cred.user, { displayName: username });
-        window.location.href = 'index.html';
-      } catch (err) {
-        alert(err.message);
-        console.error(err);
-      }
-    });
-
-    // LOGIN SUBMIT
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('loginUser').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = 'index.html';
-      } catch (err) {
-        alert(err.message);
-        console.error(err);
-      }
-    });
-  </script>
+  <!-- auth logic (firebase) -->
+  <script type="module" src="auth.js"></script>
 </body>
 </html>

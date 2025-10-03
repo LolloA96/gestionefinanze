@@ -1,52 +1,44 @@
-// profile.js - gestione overlay profilo e spese
-document.addEventListener('DOMContentLoaded', () => {
-  const editProfileBtn = document.getElementById('editProfileBtn');
-  const overlays = ['mod-profile-overlay', 'spese-overlay', 'risparmi-overlay'];
+// profile.js
+// Gestione profilo utente + logout
 
-  /* -------------------------
-     Funzioni helper overlay
-     ------------------------- */
-  function closeOverlay(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
-  }
+function getUserSession() {
+  return JSON.parse(localStorage.getItem("currentUser"));
+}
 
-  function openOverlay(id) {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('hidden');
-  }
+function clearUserSession() {
+  localStorage.removeItem("currentUser");
+}
 
-  function openSpeseOverlay(mese) {
-    const speseOverlay = document.getElementById('spese-overlay');
-    const titoloMese = document.getElementById('titoloMese');
+const user = getUserSession();
+if (!user) window.location.href = "login.html";
+else document.body.classList.remove("hidden");
 
-    if (speseOverlay) speseOverlay.classList.remove('hidden');
-    if (titoloMese) titoloMese.innerText = 'Le Spese di ' + mese;
-  }
+// --- RENDER DATI ---
+document.getElementById("profileFullName").textContent = user.username;
+document.getElementById("profileEmail").textContent = user.email;
+document.getElementById("profileInitial").textContent = user.username.charAt(0).toUpperCase();
 
-  /* -------------------------
-     Eventi overlay
-     ------------------------- */
-  editProfileBtn?.addEventListener('click', () => {
-    openOverlay('mod-profile-overlay');
-  });
+// --- LOGOUT ---
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  clearUserSession();
+  window.location.href = "login.html";
+});
 
-  // Chiudi overlay cliccando fuori dal box
-  overlays.forEach(id => {
-    const overlay = document.getElementById(id);
-    if (!overlay) return;
+// --- EDIT PROFILO ---
+const editBtn = document.getElementById("editProfileBtn");
+const overlay = document.getElementById("editProfileOverlay");
+const form = document.getElementById("editProfileForm");
+const closeBtn = document.getElementById("closeEditProfile");
 
-    overlay.addEventListener('mousedown', (e) => {
-      const box = overlay.querySelector('.overlay-content');
-      if (box && !box.contains(e.target)) {
-        overlay.classList.add('hidden');
-      }
-    });
-  });
+editBtn?.addEventListener("click", () => overlay.classList.remove("hidden"));
+closeBtn?.addEventListener("click", () => overlay.classList.add("hidden"));
 
-  /* -------------------------
-     Espongo funzioni globali
-     ------------------------- */
-  window.closeOverlay = closeOverlay;
-  window.openSpeseOverlay = openSpeseOverlay;
+form?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const updated = {
+    username: form.editFirstName.value || user.username,
+    email: form.editEmail.value || user.email,
+  };
+  localStorage.setItem("currentUser", JSON.stringify(updated));
+  window.location.reload();
 });

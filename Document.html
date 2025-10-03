@@ -1,55 +1,49 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>I tuoi documenti - Gestione Finanze</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Documenti - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <main class="docs-main">
-    <header class="docs-header">
-      <h2>I tuoi documenti</h2>
-      <button id="openAddDoc" class="add-doc-btn">+</button>
-    </header>
+<body class="hidden">
+  <header class="main-header">
+    <div class="user-info-left">
+      <span class="welcome-text">I tuoi documenti</span>
+    </div>
+    <div class="profile-icon" id="profileIconDoc" tabindex="0">L</div>
+  </header>
 
-    <section class="docs-list-section">
-      <ul class="docs-list" id="docsList">
-        <!-- Documenti popolati dinamicamente dal JS -->
-      </ul>
+  <main class="docs-main">
+    <section class="docs-list">
+      <button id="openAddDoc" class="btn-outline"> + Aggiungi documento</button>
+      <ul id="docList" class="doc-list"></ul>
     </section>
   </main>
 
-  <!-- NAV BOTTOM -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <img src="Asset/Home.svg" alt="Home icon" width="24" height="24">
-    </a>
-    <button id="openOverlay" class="nav-add">
-      <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24">
-    </button>
-    <a href="Document.html" class="nav-item">
-      <img src="Asset/File.svg" alt="File icon" width="24" height="24">
-    </a>
-  </nav>
-
   <!-- OVERLAY AGGIUNGI DOCUMENTO -->
   <div id="overlay-add-doc" class="custom-overlay hidden">
-    <div class="overlay-content" id="contentAddDoc">
-      <h3>Aggiungi Documento</h3>
-      <form id="addDocForm">
-        <input type="text" name="docTitle" placeholder="Titolo" required />
-        <input type="file" name="docFile" accept=".png,.jpeg,.jpg,.pdf" required />
-        <textarea name="docNote" placeholder="Note"></textarea>
-        <button type="submit" class="overlay-add-btn">
-          <span style="font-size:1.2em;">+</span> Aggiungi ora
-        </button>
+    <div class="overlay-content" role="dialog">
+      <button id="closeAddDoc" aria-label="Chiudi">&times;</button>
+      <form id="addDocForm" class="overlay-form">
+        <label for="docTitle">Titolo</label>
+        <input id="docTitle" name="title" required />
+        <label for="docFile">Seleziona file (png,jpg,pdf)</label>
+        <input id="docFile" name="document" type="file" accept=".png,.jpeg,.jpg,.pdf" required />
+        <div class="overlay-actions">
+          <button type="submit" class="btn-primary big">Aggiungi</button>
+        </div>
       </form>
-      <button class="overlay-close" id="closeAddDoc">X</button>
+      <ul id="docListPreview" class="list"></ul>
     </div>
   </div>
 
-  <!-- SCRIPT DOCUMENTI -->
-  <script src="document.js"></script>
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item"><img src="Asset/Home.svg" alt="Home" width="24" height="24" /></a>
+    <a href="index.html" class="nav-item"><img src="Asset/Plus.svg" alt="Plus" width="24" height="24" /></a>
+    <a href="profile.html" class="nav-item"><img src="Asset/User.svg" alt="Profilo" width="24" height="24" /></a>
+  </nav>
+
+  <script type="module" src="documento.js"></script>
 </body>
 </html>

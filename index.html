@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Home - Gestione Finanze</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="hidden">
   <div class="bg-overlay"></div>
 
   <!-- HEADER -->
   <header class="main-header">
     <div class="user-info-left">
       <span class="welcome-text">Benvenuto,</span>
-      <span class="user-name" id="userName">Lorenzo</span>
+      <span class="user-name" id="userName">Utente</span>
     </div>
     <div class="profile-icon" id="profileIcon" tabindex="0">L</div>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main>
+  <!-- MAIN -->
+  <main class="app-main">
     <section class="overview">
       <div class="card">
         <h3>Entrate</h3>
@@ -31,30 +31,28 @@
       </div>
     </section>
 
-    <!-- SEZIONE OBIETTIVI -->
     <section class="goal">
       <h4>Obiettivi da Raggiungere</h4>
-      <button id="addGoalBtn">Aggiungi obiettivo</button>
-      <!-- 🔹 LISTA OBIETTIVI -->
-      <ul id="goalList"></ul>
+      <button id="addGoalBtn" class="btn-outline">Aggiungi obiettivo</button>
+      <ul id="goalList" class="list"></ul>
     </section>
 
     <section class="monthly-expenses">
       <h3>Le spese del mese</h3>
-      <ul id="expensesList"></ul>
+      <ul id="expensesList" class="list"></ul>
     </section>
   </main>
 
-  <!-- NAV BOTTOM -->
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <img src="Asset/Home.svg" alt="Home icon" width="24" height="24" />
+    <a href="index.html" class="nav-item" aria-label="Home">
+      <img src="Asset/Home.svg" alt="Home" width="24" height="24" />
     </a>
     <button id="openOverlay" class="nav-add" aria-label="Aggiungi voce">
-      <img src="Asset/Plus.svg" alt="Plus icon" width="24" height="24" />
+      <img src="Asset/Plus.svg" alt="Aggiungi" width="24" height="24" />
     </button>
-    <a href="Document.html" class="nav-item">
-      <img src="Asset/File.svg" alt="File icon" width="24" height="24" />
+    <a href="Document.html" class="nav-item" aria-label="Documenti">
+      <img src="Asset/File.svg" alt="Documenti" width="24" height="24" />
     </a>
   </nav>
 
@@ -65,13 +63,16 @@
         <button id="tabEntrata" class="tab-btn active" type="button">Entrate</button>
         <button id="tabUscita" class="tab-btn" type="button">Uscite</button>
       </div>
-      <form id="overlayForm">
-        <input type="text" name="desc" placeholder="Nome" required />
-        <input type="number" name="amount" placeholder="Quantità" required />
-        <textarea name="notes" placeholder="Note"></textarea>
-        <button class="add-btn" type="submit">
-          <span style="font-size:1.4em;">+</span> Aggiungi ora
-        </button>
+
+      <form id="overlayForm" class="overlay-form">
+        <input type="text" name="desc" placeholder="Nome (es. Affitto)" required />
+        <input type="number" name="amount" placeholder="Quantità" step="0.01" required />
+        <textarea name="notes" placeholder="Note (opzionale)"></textarea>
+
+        <!-- Bottom primary button (come nel mockup: blu e fisso in basso overlay) -->
+        <div class="overlay-actions">
+          <button type="submit" class="btn-primary big">Aggiungi ora</button>
+        </div>
       </form>
     </div>
   </div>
@@ -80,84 +81,42 @@
   <div id="goalOverlay" class="custom-overlay hidden" aria-hidden="true">
     <div class="overlay__content" role="dialog" aria-modal="true">
       <button class="overlay-close" id="closeGoalOverlay" aria-label="Chiudi">&times;</button>
-      <!-- 🔹 FORM ALLINEATO CON app.js -->
-      <form id="addGoalForm">
+      <form id="addGoalForm" class="overlay-form">
         <label for="goalInput">Nuovo Obiettivo</label>
-        <input type="text" id="goalInput" name="goalInput" placeholder="Es. Risparmiare 500€" required />
-        <input type="text" id="goalInput" name="goalInput" placeholder="Es. Entro Dicembre" required />
-        <button type="submit" class="add-btn">Aggiungi Obiettivo</button>
+        <input id="goalInput" name="goalInput" type="text" placeholder="Es. Risparmiare 500€" required />
+        <input id="goalDeadline" name="goalDeadline" type="month" />
+        <div class="overlay-actions">
+          <button type="submit" class="btn-primary big">Aggiungi Obiettivo</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- OVERLAY DOCUMENTI -->
-  <div id="overlay-add-doc" class="custom-overlay hidden">
-    <div class="overlay-content" id="contentAddDoc">
-      <button id="closeAddDoc" aria-label="Chiudi">&times;</button>
-      <form id="addDocForm">
-        <input type="file" name="document" accept=".png,.jpeg,.jpg,.pdf" required />
-        <button type="submit">Aggiungi Documento</button>
-      </form>
-      <ul id="docList"></ul>
-    </div>
-  </div>
-
-  <!-- OVERLAY PROFILO / SPESE / RISPARMI -->
+  <!-- PROFILE / SPESA / RISPARMI OVERLAYS (aperti da profile.html o bottoni) -->
   <div id="mod-profile-overlay" class="custom-overlay hidden">
     <div class="overlay-content">
       <button onclick="closeOverlay('mod-profile-overlay')">&times;</button>
-      <input type="text" name="nome" placeholder="Nome">
-      <input type="text" name="cognome" placeholder="Cognome">
-      <input type="email" name="email" placeholder="Email">
-      <button type="submit">Salva</button>
+      <input type="text" id="profileNome" name="nome" placeholder="Nome">
+      <input type="text" id="profileCognome" name="cognome" placeholder="Cognome">
+      <input type="email" id="profileEmail" name="email" placeholder="Email">
+      <button id="saveProfileBtn" class="btn-primary">Salva</button>
     </div>
   </div>
 
   <div id="spese-overlay" class="custom-overlay hidden">
     <div class="overlay-content">
-      <h2 id="titoloMese"></h2>
-      <ul id="speseList"></ul>
+      <h2 id="titoloMese">Le Spese</h2>
+      <ul id="speseList" class="list"></ul>
     </div>
   </div>
 
   <div id="risparmi-overlay" class="custom-overlay hidden">
     <div class="overlay-content">
-      <ul id="risparmiList"></ul>
+      <ul id="risparmiList" class="list"></ul>
     </div>
   </div>
 
-  <!-- SCRIPT APP -->
-  <script src="app.js"></script>
-
-  <!-- FIREBASE + AUTH GUARD -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDkroLyHVdHQEjnYnf2yLaE3jUhZCL4U0w",
-      authDomain: "gestione-finanze-95e06.firebaseapp.com",
-      projectId: "gestione-finanze-95e06",
-      storageBucket: "gestione-finanze-95e06.appspot.com",
-      messagingSenderId: "229873840755",
-      appId: "1:229873840755:web:5fe74e3199082d72f07006",
-      measurementId: "G-QJH7V53NKJ"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch(e) { /* analytics opzionale */ }
-
-    const auth = getAuth(app);
-
-    // Auth guard: se non autenticato, vai a login.html
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        if (!location.pathname.endsWith('login.html')) {
-          window.location.href = 'login.html';
-        }
-      }
-    });
-  </script>
+  <!-- SCRIPTS -->
+  <script type="module" src="app.js"></script>
 </body>
 </html>
