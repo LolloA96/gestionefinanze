@@ -12,34 +12,44 @@
       <h1 id="authTitle">Iscriviti Ora</h1>
     </header>
 
-    <!-- LOGIN -->
-    <section id="loginForm" class="auth-panel">
-      <h2>Accedi</h2>
-      <form id="formLogin">
-        <label for="loginUser">Email o Username</label>
-        <input id="loginUser" name="loginUser" type="text" placeholder="Inserisci email o username" required />
-        <label for="loginPassword">Password</label>
-        <input id="loginPassword" name="loginPassword" type="password" placeholder="Inserisci password" required />
-        <button type="submit" class="btn-primary">Accedi</button>
-      </form>
-      <p class="small">Non hai un account? <button id="goSignUp" class="link-btn">Registrati</button></p>
-    </section>
+    <!-- LOGIN FORM -->
+<div id="loginForm">
+  <h2>Accedi</h2>
+  <form class="auth-form">
+    <label for="loginUser">Email o Username:</label>
+    <input type="text" id="loginUser" name="loginUser" placeholder="Inserisci email o username" required />
 
-    <!-- SIGNUP -->
-    <section id="signupForm" class="auth-panel hidden">
-      <h2>Registrati</h2>
-      <form id="formSignup">
-        <label for="signupUser">Username</label>
-        <input id="signupUser" name="signupUser" type="text" placeholder="Scegli un nome utente" required />
-        <label for="signupEmail">Email</label>
-        <input id="signupEmail" name="signupEmail" type="email" placeholder="Inserisci email" required />
-        <label for="signupPassword">Password</label>
-        <input id="signupPassword" name="signupPassword" type="password" placeholder="Crea una password" required />
-        <button type="submit" class="btn-primary">Iscriviti</button>
-      </form>
-      <p class="small">Hai già un account? <button id="goLogin" class="link-btn">Accedi</button></p>
-    </section>
-  </main>
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" name="loginPassword" placeholder="Inserisci password" required />
+
+    <button type="submit">Accedi</button>
+  </form>
+
+  <p>Non hai un account? 
+    <button id="goSignUp" type="button" class="link-button">Registrati</button>
+  </p>
+</div>
+
+<!-- SIGNUP FORM -->
+<div id="signupForm" class="hidden">
+  <h2>Registrati</h2>
+  <form class="auth-form">
+    <label for="signupUser">Username:</label>
+    <input type="text" id="signupUser" name="signupUser" placeholder="Scegli un nome utente" required />
+
+    <label for="signupEmail">Email:</label>
+    <input type="email" id="signupEmail" name="signupEmail" placeholder="Inserisci email" required />
+
+    <label for="signupPassword">Password:</label>
+    <input type="password" id="signupPassword" name="signupPassword" placeholder="Crea una password" required />
+
+    <button type="submit">Iscriviti</button>
+  </form>
+
+  <p>Hai già un account? 
+    <button id="goLogin" type="button" class="link-button">Accedi</button>
+  </p>
+</div>
 
   <!-- auth logic (firebase) -->
   <script type="module" src="auth.js"></script>
