@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 
+<div id="snackbar" class="snackbar hidden" role="status" aria-live="polite">
+  <span id="snackbar-text">Elemento aggiunto</span>
+  <button id="snackbar-undo" type="button">Annulla</button>
+</div>
+
+
 <body class="app-bg">
   <!-- Splash router decides: show Signin only on first run; otherwise Login -->
   <div id="router-guard" aria-hidden="true"></div>

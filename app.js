@@ -9,27 +9,33 @@ const storage = {
   del: (k) => localStorage.removeItem(k)
 };
 
+
 // Chiavi di storage
 const KEY_FIRST_RUN_DONE = 'gs:firstRunDone';
 const KEY_SESSION = 'gs:session';        // { uid, name, email }
 const KEY_DATA = 'gs:data';              // demo data for lists
 
+
 // Selettori rapidi
 const $ = (sel, root=document) => root.querySelector(sel);
 const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
 
 // Views
 const viewSignin = $('#view-signin');
 const viewLogin  = $('#view-login');
 const viewApp    = $('#view-app');
 
+
 // Pagine
 const pageHome   = $('#home');
 const pageProfile= $('#profile');
 
+
 // Top username
 const usernameTop = $('#username-top');
 const usernameProfile = $('#username-profile');
+
 
 // Overlay refs
 const dlgAdd   = $('#ov-add');
@@ -39,6 +45,7 @@ const dlgGoal  = $('#ov-goal');
 const dlgDocs  = $('#ov-docs');
 const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
+
 
 // Bottoni globali
 $('#go-login-from-signin').addEventListener('click', () => showView('login'));
@@ -52,11 +59,13 @@ $$('.close').forEach(btn => btn.addEventListener('click', (e) => {
   if (dlg) dlg.close('cancel');
 }));
 
+
 // Selettore aggiungi -> apre overlay specifico
 $('#chooser-entrata').addEventListener('click', () => { dlgAdd.close(); openDialog(dlgEntr); });
 $('#chooser-uscita').addEventListener('click', () => { dlgAdd.close(); openDialog(dlgUsc); });
 $('#chooser-goal').addEventListener('click',   () => { dlgAdd.close(); openDialog(dlgGoal); });
 $('#chooser-doc').addEventListener('click',    () => { dlgAdd.close(); openDialog(dlgDocs); });
+
 
 // Tabs
 $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
@@ -66,6 +75,7 @@ $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
   switchPage(t);
 }));
 
+
 // Form: Signin
 $('#form-signin').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -73,7 +83,9 @@ $('#form-signin').addEventListener('submit', (e) => {
   const email = $('#su-email').value.trim().toLowerCase();
   const password = $('#su-password').value; // mock
 
+
   if (!name || !email || !password) return;
+
 
   // Mock account creation
   const uid = 'uid_' + Math.random().toString(36).slice(2,10);
@@ -81,16 +93,19 @@ $('#form-signin').addEventListener('submit', (e) => {
   storage.set(KEY_SESSION, session);
   storage.set(KEY_FIRST_RUN_DONE, true);
 
+
   initDemoDataIfNeeded();
   hydrateUser(session);
   showView('app');
 });
+
 
 // Form: Login
 $('#form-login').addEventListener('submit', (e) => {
   e.preventDefault();
   const email = $('#li-email').value.trim().toLowerCase();
   const password = $('#li-password').value;
+
 
   // Mock login: accept any input that matches saved email if exists, otherwise create session
   let session = storage.get(KEY_SESSION, null);
@@ -110,6 +125,7 @@ $('#form-login').addEventListener('submit', (e) => {
   hydrateUser(session);
   showView('app');
 });
+
 
 // Edit profilo
 $('#form-edit-profile').addEventListener('submit', (e) => {
@@ -131,6 +147,48 @@ $('#open-edit-profile').addEventListener('click', () => {
   openDialog(dlgEditProfile);
 });
 
+
+// =====================
+// Snackbar + Undo (NUOVO)
+// =====================
+const sb = document.getElementById('snackbar');
+const sbText = document.getElementById('snackbar-text');
+const sbUndoBtn = document.getElementById('snackbar-undo');
+let sbTimer = null;
+let lastAction = null; // { type:'entrata'|'uscita', index: number }
+
+function showSnackbar(message, action){
+  if (!sb) return; // se non presente in HTML non fa nulla
+  sbText.textContent = message;
+  sb.classList.remove('hidden');
+  sb.classList.add('snackbar-enter');
+  clearTimeout(sbTimer);
+  lastAction = action || null;
+  sbTimer = setTimeout(hideSnackbar, 5000);
+}
+function hideSnackbar(){
+  if (!sb) return;
+  sb.classList.add('hidden');
+  sb.classList.remove('snackbar-enter');
+  lastAction = null;
+}
+if (sbUndoBtn){
+  sbUndoBtn.addEventListener('click', () => {
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[] });
+    if (lastAction?.type === 'entrata') {
+      data.entrate.splice(lastAction.index, 1);
+      storage.set(KEY_DATA, data);
+      render();
+    } else if (lastAction?.type === 'uscita') {
+      data.uscite.splice(lastAction.index, 1);
+      storage.set(KEY_DATA, data);
+      render();
+    }
+    hideSnackbar();
+  });
+}
+
+
 // Entrata
 $('#form-entrata').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -142,7 +200,10 @@ $('#form-entrata').addEventListener('submit', (e) => {
   storage.set(KEY_DATA, data);
   dlgEntr.close('confirm');
   render();
+  // snackbar con annulla
+  showSnackbar('Entrata aggiunta', { type:'entrata', index:0 });
 });
+
 
 // Uscita
 $('#form-uscita').addEventListener('submit', (e) => {
@@ -155,7 +216,10 @@ $('#form-uscita').addEventListener('submit', (e) => {
   storage.set(KEY_DATA, data);
   dlgUsc.close('confirm');
   render();
+  // snackbar con annulla
+  showSnackbar('Uscita aggiunta', { type:'uscita', index:0 });
 });
+
 
 // Goal
 $('#form-goal').addEventListener('submit', (e) => {
@@ -170,6 +234,7 @@ $('#form-goal').addEventListener('submit', (e) => {
   render();
 });
 
+
 // Documenti
 $('#form-doc').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -183,32 +248,38 @@ $('#form-doc').addEventListener('submit', (e) => {
   renderDocs();
 });
 
+
 // Helpers
 function openDialog(dlg){
   if (typeof dlg.showModal === 'function') dlg.showModal();
   else dlg.classList.remove('hidden');
 }
 
+
 function showView(which){
   viewSignin.classList.add('hidden');
   viewLogin.classList.add('hidden');
   viewApp.classList.add('hidden');
+
 
   if (which === 'signin') viewSignin.classList.remove('hidden');
   else if (which === 'login') viewLogin.classList.remove('hidden');
   else viewApp.classList.remove('hidden');
 }
 
+
 function switchPage(tab){
   pageHome.classList.toggle('page-active', tab === 'home');
   pageProfile.classList.toggle('page-active', tab === 'profile');
 }
+
 
 function hydrateUser(session){
   const name = session?.name || 'Utente';
   usernameTop.textContent = name;
   usernameProfile.textContent = name;
 }
+
 
 // Rendering
 function initDemoDataIfNeeded(){
@@ -222,6 +293,7 @@ function initDemoDataIfNeeded(){
   }
 }
 
+
 function render(){
   const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
   // Totali semplici
@@ -229,6 +301,7 @@ function render(){
   const totUsc  = data.uscite.reduce((s,e)=>s+Math.abs(e.valore),0);
   $('#tot-entrate').textContent = formatEuro(totEntr);
   $('#tot-risparmi').textContent = formatEuro(Math.max(0, totEntr - totUsc));
+
 
   // Liste spese (home)
   const ulHome = $('#spese-mese'); ulHome.innerHTML='';
@@ -238,6 +311,7 @@ function render(){
     ulHome.appendChild(li);
   });
 
+
   // Profilo liste
   const ulSpese = $('#spese-profilo'); ulSpese.innerHTML='';
   data.uscite.forEach(it => {
@@ -246,6 +320,7 @@ function render(){
     ulSpese.appendChild(li);
   });
 
+
   const ulRis = $('#risparmi-profilo'); ulRis.innerHTML='';
   data.entrate.forEach(it => {
     const li = document.createElement('li');
@@ -253,8 +328,10 @@ function render(){
     ulRis.appendChild(li);
   });
 
+
   renderDocs();
 }
+
 
 function renderDocs(){
   const data = storage.get(KEY_DATA, { docs:[] });
@@ -266,13 +343,16 @@ function renderDocs(){
   });
 }
 
+
 function formatEuro(n){ return n.toLocaleString('it-IT', { style:'currency', currency:'EUR' }); }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
 
 // Router iniziale: Signin SOLO al primo avvio, poi Login ai refresh
 (function boot(){
   const firstDone = storage.get(KEY_FIRST_RUN_DONE, false);
   const session = storage.get(KEY_SESSION, null);
+
 
   if (!firstDone) {
     showView('signin'); // prima volta
@@ -283,6 +363,7 @@ function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt
     initDemoDataIfNeeded();
     showView('app');    // sessione presente
   }
+
 
   // Bottom tabs default
   switchPage('home');
