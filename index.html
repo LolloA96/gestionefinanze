@@ -7,18 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href=".style.css" />
 </head>
-
-<div id="snackbar" class="snackbar hidden" role="status" aria-live="polite">
-  <span id="snackbar-text">Elemento aggiunto</span>
-  <button id="snackbar-undo" type="button">Annulla</button>
-</div>
-
 
 <body class="app-bg">
   <!-- Splash router decides: show Signin only on first run; otherwise Login -->
   <div id="router-guard" aria-hidden="true"></div>
+
+  <div id="snackbar" class="snackbar hidden" role="status" aria-live="polite">
+  <span id="snackbar-text">Elemento aggiunto</span>
+  <button id="snackbar-undo" type="button">Annulla</button>
+</div>
 
   <!-- Signin (primo avvio) -->
   <section id="view-signin" class="view view-centered" data-view>
