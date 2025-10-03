@@ -165,7 +165,7 @@ dialog{border:0; padding:0; background:transparent}
 .overlay-header{
   display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
 }
-.overlay-header h3{margin:0; font-size:18px}
+.overlay-header h3{margin:0; color: #fff; font-size:18px}
 .overlay-card .btn-block{margin-top:10px}
 
 /* Overlay: chooser */
