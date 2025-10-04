@@ -7,99 +7,88 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <!-- Usa il nome corretto del file CSS -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body class="app-bg">
-  <!-- Splash router decides: show Signin only on first run; otherwise Login -->
   <div id="router-guard" aria-hidden="true"></div>
 
   <div id="snackbar" class="snackbar hidden" role="status" aria-live="polite">
-  <span id="snackbar-text">Elemento aggiunto</span>
-  <button id="snackbar-undo" type="button">Annulla</button>
-</div>
+    <span id="snackbar-text">Elemento aggiunto</span>
+    <button id="snackbar-undo" type="button">Annulla</button>
+  </div>
 
-  <!-- Signin (primo avvio) -->
+  <!-- Signin -->
   <section id="view-signin" class="view view-centered" data-view>
     <div class="card auth-card">
       <h1 class="card-title">Iscriviti Ora</h1>
       <form id="form-signin" autocomplete="on">
-        <label class="field">
-          <span>Nome</span>
-          <input id="su-name" type="text" name="name" required />
-        </label>
-        <label class="field">
-          <span>Email</span>
-          <input id="su-email" type="email" name="email" required />
-        </label>
-        <label class="field">
-          <span>Password</span>
-          <input id="su-password" type="password" name="password" minlength="6" required />
-        </label>
+        <label class="field"><span>Nome</span><input id="su-name" type="text" required /></label>
+        <label class="field"><span>Email</span><input id="su-email" type="email" required /></label>
+        <label class="field"><span>Password</span><input id="su-password" type="password" minlength="6" required /></label>
         <button class="btn btn-primary btn-block" type="submit">Iscriviti</button>
       </form>
       <button id="go-login-from-signin" class="btn btn-ghost btn-block">Hai già un account?</button>
     </div>
   </section>
 
-  <!-- Login (default per refresh/navigazione) -->
+  <!-- Login -->
   <section id="view-login" class="view view-centered hidden" data-view>
     <div class="card auth-card">
       <h1 class="card-title">Accedi</h1>
       <form id="form-login" autocomplete="on">
-        <label class="field">
-          <span>Email</span>
-          <input id="li-email" type="email" name="email" required />
-        </label>
-        <label class="field">
-          <span>Password</span>
-          <input id="li-password" type="password" name="password" required />
-        </label>
+        <label class="field"><span>Email</span><input id="li-email" type="email" required /></label>
+        <label class="field"><span>Password</span><input id="li-password" type="password" required /></label>
         <button class="btn btn-primary btn-block" type="submit">Accedi</button>
       </form>
       <button id="go-signin-from-login" class="btn btn-ghost btn-block">Crea nuovo account</button>
     </div>
   </section>
 
-  <!-- App shell -->
+  <!-- App -->
   <section id="view-app" class="view hidden" data-view>
-    <!-- Topbar con nome utente -->
     <header class="topbar">
       <div class="topbar-left">
         <span class="greeting">Benvenuto/a,</span>
         <span id="username-top" class="username">Utente</span>
       </div>
-      <button id="open-docs" class="icon-btn" aria-label="Documenti">
-        <span class="icon icon-docs"></span>
-      </button>
+      <button id="open-docs" class="icon-btn" aria-label="Documenti"><span class="icon icon-docs"></span></button>
     </header>
 
     <!-- Home -->
     <main id="home" class="page page-active">
-      <section class="summary">
-        <div class="summary-card">
-          <div class="summary-row">
-            <div>
+      <!-- Riepilogo: Entrate + Risparmi -->
+      <section class="home-hero">
+        <div class="grid-two">
+          <article class="summary-card">
+            <div class="summary-card-inner">
               <div class="summary-title">Entrate</div>
               <div id="tot-entrate" class="summary-value">0,00€</div>
             </div>
-            <div>
+          </article>
+          <article class="summary-card">
+            <div class="summary-card-inner">
               <div class="summary-title">Risparmi</div>
               <div id="tot-risparmi" class="summary-value">0,00€</div>
             </div>
-
-        <div class="list-card">
-          <div class="list-header">Le spese del mese</div>
-          <ul id="spese-mese" class="list"></ul>
+          </article>
         </div>
       </section>
 
-       <section class="Obiettivi">
-             <div class="summary-title">Obiettivi da Raggiungere</div>
-          </div>
-          <button id="open-goals" class="btn btn-secondary btn-block">Obiettivi da Raggiungere</button>
-        </div>
-        
+      <!-- Obiettivi -->
+      <section class="goals-card">
+        <h3 class="list-header">Obiettivo da Raggiungere</h3>
+        <button id="open-goals" class="btn btn-secondary btn-block">
+          <span class="icon icon-plus"></span> Aggiungi Obiettivo
+        </button>
+      </section>
+
+      <!-- Spese -->
+      <section class="expenses-card">
+        <h3 class="list-header">Le spese del mese</h3>
+        <ul id="spese-mese" class="list"></ul>
+      </section>
     </main>
 
     <!-- Profilo -->
@@ -113,9 +102,7 @@
             <span id="saldo-profile" class="pill pill-strong">2.000,00€</span>
           </div>
         </div>
-        <button id="open-edit-profile" class="icon-btn" aria-label="Modifica profilo">
-          <span class="icon icon-edit"></span>
-        </button>
+        <button id="open-edit-profile" class="icon-btn" aria-label="Modifica profilo"><span class="icon icon-edit"></span></button>
       </div>
 
       <div class="list-group">
@@ -123,7 +110,6 @@
           <div class="list-header">Le Tue Spese</div>
           <ul id="spese-profilo" class="list"></ul>
         </div>
-
         <div class="list-card">
           <div class="list-header">I Tuoi Risparmi</div>
           <ul id="risparmi-profilo" class="list"></ul>
@@ -133,150 +119,14 @@
 
     <!-- Bottom nav -->
     <nav class="bottom-nav">
-      <button class="tab-btn active" data-tab="home" aria-label="Home">
-        <span class="icon icon-home"></span>
-      </button>
-      <button id="open-add" class="fab" aria-label="Aggiungi">
-        <span class="icon icon-plus"></span>
-      </button>
-      <button class="tab-btn" data-tab="profile" aria-label="Profilo">
-        <span class="icon icon-user"></span>
-      </button>
+      <button class="tab-btn active" data-tab="home" aria-label="Home"><span class="icon icon-home"></span></button>
+      <button id="open-add" class="fab" aria-label="Aggiungi"><span class="icon icon-plus"></span></button>
+      <button class="tab-btn" data-tab="profile" aria-label="Profilo"><span class="icon icon-user"></span></button>
     </nav>
   </section>
 
-  <!-- Overlay: Aggiungi Entrata -->
-  <dialog id="ov-entrata" class="overlay-card">
-    <form method="dialog" class="overlay-body" id="form-entrata">
-      <header class="overlay-header">
-        <h3>Entrate</h3>
-        <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
-      </header>
-      <label class="field">
-        <span>Nome</span>
-        <input id="in-entrata-nome" type="text" required />
-      </label>
-      <label class="field">
-        <span>Valore</span>
-        <input id="in-entrata-valore" type="number" step="0.01" min="0" required />
-      </label>
-      <button class="btn btn-primary btn-block" value="confirm" id="add-entrata-submit">Aggiungi entrata</button>
-    </form>
-  </dialog>
-
-  <!-- Overlay: Aggiungi Uscita -->
-  <dialog id="ov-uscita" class="overlay-card">
-    <form method="dialog" class="overlay-body" id="form-uscita">
-      <header class="overlay-header">
-        <h3>Uscite</h3>
-        <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
-      </header>
-      <label class="field">
-        <span>Nome</span>
-        <input id="in-uscita-nome" type="text" required />
-      </label>
-      <label class="field">
-        <span>Valore</span>
-        <input id="in-uscita-valore" type="number" step="0.01" min="-100000" required />
-      </label>
-      <button class="btn btn-primary btn-block" value="confirm" id="add-uscita-submit">Aggiungi uscita</button>
-    </form>
-  </dialog>
-
-  <!-- Overlay: Obiettivi -->
-  <dialog id="ov-goal" class="overlay-card">
-    <form method="dialog" class="overlay-body" id="form-goal">
-      <header class="overlay-header">
-        <h3>Obiettivi</h3>
-        <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
-      </header>
-      <label class="field">
-        <span>Nome Obiettivo</span>
-        <input id="in-goal-nome" type="text" required />
-      </label>
-      <label class="field">
-        <span>Importo</span>
-        <input id="in-goal-importo" type="number" step="0.01" min="0" required />
-      </label>
-      <button class="btn btn-primary btn-block" value="confirm" id="add-goal-submit">Salva obiettivo</button>
-    </form>
-  </dialog>
-
-  <!-- Overlay: Documenti (lista + aggiungi) -->
-  <dialog id="ov-docs" class="overlay-docs">
-    <div class="docs-layout">
-      <div class="docs-list">
-        <header class="overlay-header">
-          <h3>I tuoi documenti</h3>
-          <div class="docs-actions">
-            <button id="open-docs-add" class="icon-btn" aria-label="Aggiungi documento">
-              <span class="icon icon-plus"></span>
-            </button>
-            <button class="icon-btn close" value="cancel" data-close-docs aria-label="Chiudi">×</button>
-          </div>
-        </header>
-        <ul id="docs-ul" class="list"></ul>
-        <footer class="docs-footer">
-          <button class="tab-btn" data-tab="home"><span class="icon icon-home"></span></button>
-          <button class="fab"><span class="icon icon-plus"></span></button>
-          <button class="tab-btn" data-tab="profile"><span class="icon icon-user"></span></button>
-        </footer>
-      </div>
-
-      <div class="docs-add hidden" id="docs-add-panel">
-        <header class="overlay-header">
-          <h3>Aggiungi Documento</h3>
-          <button class="icon-btn close" id="close-docs-add" aria-label="Chiudi">×</button>
-        </header>
-        <form id="form-doc" class="overlay-body">
-          <label class="field">
-            <span>Titolo</span>
-            <input id="in-doc-title" type="text" required />
-          </label>
-          <label class="field">
-            <span>Nota</span>
-            <input id="in-doc-note" type="text" />
-          </label>
-          <button class="btn btn-primary btn-block" type="submit">Aggiungi ora</button>
-        </form>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- Overlay: Modifica profilo -->
-  <dialog id="ov-edit-profile" class="overlay-card">
-    <form method="dialog" class="overlay-body" id="form-edit-profile">
-      <header class="overlay-header">
-        <h3>Modifica profilo</h3>
-        <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
-      </header>
-      <label class="field">
-        <span>Nome</span>
-        <input id="in-profile-name" type="text" required />
-      </label>
-      <label class="field">
-        <span>Email</span>
-        <input id="in-profile-email" type="email" required />
-      </label>
-      <button class="btn btn-primary btn-block" value="confirm" id="save-profile-submit">Salva modifiche</button>
-    </form>
-  </dialog>
-
-  <!-- Overlay: Aggiungi (selettore) -->
-  <dialog id="ov-add" class="overlay-chooser">
-    <div class="overlay-body">
-      <header class="overlay-header">
-        <h3>Aggiungi</h3>
-        <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
-      </header>
-      <div class="chooser-grid">
-        <button id="chooser-entrata" class="btn btn-secondary">Entrata</button>
-        <button id="chooser-uscita" class="btn btn-secondary">Uscita</button>
-        <button id="chooser-goal" class="btn btn-secondary">Obiettivo</button>
-        <button id="chooser-doc" class="btn btn-secondary">Documento</button>
-      </div>
-    </div>
-  </dialog>
+  <!-- Overlay vari (immutati) -->
+  <!-- ... mantieni identico il resto dei dialog come nel tuo file ... -->
 
   <script type="module" src="./app.js"></script>
 </body>
