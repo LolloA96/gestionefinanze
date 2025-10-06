@@ -41,12 +41,18 @@ const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
 
 // Bottoni globali
+document.addEventListener('DOMContentLoaded', () => {}
 $('#go-login-from-signin').addEventListener('click', () => showView('login'));
 $('#go-signin-from-login').addEventListener('click', () => showView('signin'));
 $('#open-add').addEventListener('click', () => openDialog(dlgAdd));
 $('#open-docs').addEventListener('click', () => openDialog(dlgDocs));
-$('#open-docs-add').addEventListener('click', () => docsAddPanel.classList.remove('hidden'));
-$('#close-docs-add').addEventListener('click', () => docsAddPanel.classList.add('hidden'));
+if ($('#open-docs-add')) {
+  $('#open-docs-add').addEventListener('click', () => docsAddPanel.classList.remove('hidden'));
+}
+if ($('#close-docs-add')) {
+  $('#close-docs-add').addEventListener('click', () => docsAddPanel.classList.add('hidden'));
+}
+
 $$('.close').forEach(btn => btn.addEventListener('click', (e) => {
   const dlg = e.target.closest('dialog');
   if (dlg) dlg.close('cancel');
@@ -131,42 +137,48 @@ $('#open-edit-profile').addEventListener('click', () => {
 // =====================
 // Snackbar + Undo (entrate) + Bottone in riga per spese
 // =====================
-const sb = document.getElementById('snackbar');
-const sbText = document.getElementById('snackbar-text');
-const sbUndoBtn = document.getElementById('snackbar-undo');
-let sbTimer = null;
-let lastAction = null; // { type:'entrata'|'uscita', index: number }
+document.addEventListener('DOMContentLoaded', () => {
+  const sb = document.getElementById('snackbar');
+  const sbText = document.getElementById('snackbar-text');
+  const sbUndoBtn = document.getElementById('snackbar-undo');
+  let sbTimer = null;
+  let lastAction = null;
 
-function showSnackbar(message, action){
-  if (!sb) return;
-  sbText.textContent = message;
-  sb.classList.remove('hidden');
-  sb.classList.add('snackbar-enter');
-  clearTimeout(sbTimer);
-  lastAction = action || null;
-  sbTimer = setTimeout(hideSnackbar, 5000);
-}
-function hideSnackbar(){
-  if (!sb) return;
-  sb.classList.add('hidden');
-  sb.classList.remove('snackbar-enter');
-  lastAction = null;
-}
-if (sbUndoBtn){
-  sbUndoBtn.addEventListener('click', () => {
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[] });
-    if (lastAction?.type === 'entrata') {
-      data.entrate.splice(lastAction.index, 1);
-      storage.set(KEY_DATA, data);
-      render();
-    } else if (lastAction?.type === 'uscita') {
-      data.uscite.splice(lastAction.index, 1);
-      storage.set(KEY_DATA, data);
-      render();
-    }
-    hideSnackbar();
-  });
-}
+  function showSnackbar(message, action){
+    if (!sb) return;
+    sbText.textContent = message;
+    sb.classList.remove('hidden');
+    sb.classList.add('snackbar-enter');
+    clearTimeout(sbTimer);
+    lastAction = action || null;
+    sbTimer = setTimeout(hideSnackbar, 5000);
+  }
+  function hideSnackbar(){
+    if (!sb) return;
+    sb.classList.add('hidden');
+    sb.classList.remove('snackbar-enter');
+    lastAction = null;
+  }
+
+  if (sbUndoBtn){
+    sbUndoBtn.addEventListener('click', () => {
+      const data = JSON.parse(localStorage.getItem('gs:data')) || { entrate:[], uscite:[] };
+      if (lastAction?.type === 'entrata') {
+        data.entrate.splice(lastAction.index, 1);
+        localStorage.setItem('gs:data', JSON.stringify(data));
+        render();
+      } else if (lastAction?.type === 'uscita') {
+        data.uscite.splice(lastAction.index, 1);
+        localStorage.setItem('gs:data', JSON.stringify(data));
+        render();
+      }
+      hideSnackbar();
+    });
+  }
+
+  window.showSnackbar = showSnackbar; // esporta globalmente se usi altrove
+});
+
 
 // Entrata
 $('#form-entrata').addEventListener('submit', (e) => {
