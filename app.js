@@ -41,7 +41,7 @@ const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
 
 // Bottoni globali
-document.addEventListener('DOMContentLoaded', () => {}
+document.addEventListener('DOMContentLoaded', () => {
 $('#go-login-from-signin').addEventListener('click', () => showView('login'));
 $('#go-signin-from-login').addEventListener('click', () => showView('signin'));
 $('#open-add').addEventListener('click', () => openDialog(dlgAdd));
