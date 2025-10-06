@@ -72,47 +72,55 @@ $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
   switchPage(t);
 }));
 
+
 // Form: Signin
-$('#form-signin').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = $('#su-name').value.trim();
-  const email = $('#su-email').value.trim().toLowerCase();
-  const password = $('#su-password').value; // mock
-  if (!name || !email || !password) return;
+const formSignin = document.getElementById('form-signin');
+if (formSignin) {
+  formSignin.addEventListener('submit', (e) => {
+    e.preventDefault(); // blocca il submit nativo
+    const name = document.getElementById('su-name').value.trim();
+    const email = document.getElementById('su-email').value.trim().toLowerCase();
+    const password = document.getElementById('su-password').value;
+    if (!name || !email || !password) return;
 
-  // Mock account creation
-  const uid = 'uid_' + Math.random().toString(36).slice(2,10);
-  const session = { uid, name, email };
-  storage.set(KEY_SESSION, session);
-  storage.set(KEY_FIRST_RUN_DONE, true);
+    const uid = 'uid_' + Math.random().toString(36).slice(2,10);
+    const session = { uid, name, email };
+    localStorage.setItem('gs:session', JSON.stringify(session));
+    localStorage.setItem('gs:firstRunDone', JSON.stringify(true));
 
-  initDemoDataIfNeeded();
-  hydrateUser(session);
-  showView('app');
-});
+    initDemoDataIfNeeded();
+    hydrateUser(session);
+    showView('app'); // vai all’app senza ricaricare
+  });
+}
 
 // Form: Login
-$('#form-login').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = $('#li-email').value.trim().toLowerCase();
-  const password = $('#li-password').value;
+const formLogin = document.getElementById('form-login');
+if (formLogin) {
+  formLogin.addEventListener('submit', (e) => {
+    e.preventDefault(); // blocca il submit nativo
+    const email = document.getElementById('li-email').value.trim().toLowerCase();
+    const password = document.getElementById('li-password').value;
+    if (!email || !password) return;
 
-  // Mock login
-  let session = storage.get(KEY_SESSION, null);
-  if (session && session.email && session.email === email) {
-    // ok
-  } else if (!session) {
-    const name = email.split('@')[0].replace(/\W+/g,' ').trim() || 'Utente';
-    session = { uid: 'uid_' + Math.random().toString(36).slice(2,10), name, email };
-    storage.set(KEY_SESSION, session);
-  } else {
-    session.email = email;
-    storage.set(KEY_SESSION, session);
-  }
-  initDemoDataIfNeeded();
-  hydrateUser(session);
-  showView('app');
-});
+    let session = JSON.parse(localStorage.getItem('gs:session') || 'null');
+    if (session && session.email === email) {
+      // ok
+    } else if (!session) {
+      const name = email.split('@')[0].replace(/\W+/g,' ').trim() || 'Utente';
+      session = { uid: 'uid_' + Math.random().toString(36).slice(2,10), name, email };
+      localStorage.setItem('gs:session', JSON.stringify(session));
+    } else {
+      session.email = email;
+      localStorage.setItem('gs:session', JSON.stringify(session));
+    }
+
+    initDemoDataIfNeeded();
+    hydrateUser(session);
+    showView('app'); // vai all’app senza ricaricare
+  });
+}
+
 
 // Edit profilo
 $('#form-edit-profile').addEventListener('submit', (e) => {
