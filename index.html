@@ -126,6 +126,31 @@
   </section>
 
   <!-- Overlay vari (immutati) -->
+     <!-- Bottone per aggiungere una entrata -->
+  <button id="chooser-entrata">Aggiungi Entrata</button>
+  
+  <!-- Bottone per aggiungere una uscita -->
+  <button id="chooser-uscita">Aggiungi Uscita</button>
+  
+  <!-- Overlay per aggiungere una entrata -->
+  <dialog id="ov-entrata" class="hidden">
+    <form id="form-entrata">
+      <input id="in-entrata-nome" placeholder="Nome entrata" required>
+      <input id="in-entrata-valore" type="number" placeholder="Valore" required>
+      <button type="submit">Salva</button>
+      <button type="button" class="close">Chiudi</button>
+    </form>
+  </dialog>
+  
+  <!-- Overlay per aggiungere una uscita -->
+  <dialog id="ov-uscita" class="hidden">
+    <form id="form-uscita">
+      <input id="in-uscita-nome" placeholder="Nome uscita" required>
+      <input id="in-uscita-valore" type="number" placeholder="Valore" required>
+      <button type="submit">Salva</button>
+      <button type="button" class="close">Chiudi</button>
+    </form>
+  </dialog>
   <!-- ... mantieni identico il resto dei dialog come nel tuo file ... -->
 
   <script type="module" src="./app.js"></script>

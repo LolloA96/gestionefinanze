@@ -38,7 +38,12 @@ const dlgDocs  = $('#ov-docs');
 const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
 
-// Funzioni base
+// Funzioni base/
+// / Apri pop-up per aggiungere una entrata
+openDialog(dlgEntr);
+
+// Apri pop-up per aggiungere una uscita
+openDialog(dlgUsc);
 function openDialog(dlg){
   if (dlg?.showModal) dlg.showModal();
   else dlg?.classList?.remove('hidden');
