@@ -38,12 +38,7 @@ const dlgDocs  = $('#ov-docs');
 const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
 
-// Funzioni base/
-// / Apri pop-up per aggiungere una entrata
-openDialog(dlgEntr);
-
-// Apri pop-up per aggiungere una uscita
-openDialog(dlgUsc);
+// // Funzioni base
 function openDialog(dlg){
   if (dlg?.showModal) dlg.showModal();
   else dlg?.classList?.remove('hidden');
@@ -73,6 +68,7 @@ function initDemoDataIfNeeded(){
     });
   }
 }
+
 function formatEuro(n){ return n.toLocaleString('it-IT', { style:'currency', currency:'EUR' }); }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 

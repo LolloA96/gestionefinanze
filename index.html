@@ -126,33 +126,47 @@
   </section>
 
   <!-- Overlay vari (immutati) -->
-     <!-- Bottone per aggiungere una entrata -->
-  <button id="chooser-entrata">Aggiungi Entrata</button>
-  
-  <!-- Bottone per aggiungere una uscita -->
-  <button id="chooser-uscita">Aggiungi Uscita</button>
-  
-  <!-- Overlay per aggiungere una entrata -->
-  <dialog id="ov-entrata" class="hidden">
-    <form id="form-entrata">
-      <input id="in-entrata-nome" placeholder="Nome entrata" required>
-      <input id="in-entrata-valore" type="number" placeholder="Valore" required>
-      <button type="submit">Salva</button>
-      <button type="button" class="close">Chiudi</button>
-    </form>
-  </dialog>
-  
-  <!-- Overlay per aggiungere una uscita -->
-  <dialog id="ov-uscita" class="hidden">
-    <form id="form-uscita">
-      <input id="in-uscita-nome" placeholder="Nome uscita" required>
-      <input id="in-uscita-valore" type="number" placeholder="Valore" required>
-      <button type="submit">Salva</button>
-      <button type="button" class="close">Chiudi</button>
-    </form>
-  </dialog>
-  <!-- ... mantieni identico il resto dei dialog come nel tuo file ... -->
+   <!-- Pulsanti del chooser (puoi tenerli dove preferisci, ad es. dentro il dialog #ov-add) -->
+<button id="chooser-entrata" class="btn btn-secondary">Entrata</button>
+<button id="chooser-uscita"  class="btn btn-secondary">Uscita</button>
 
+<!-- Overlay: Aggiungi Entrata -->
+<dialog id="ov-entrata" class="overlay-card">
+  <form method="dialog" class="overlay-body" id="form-entrata">
+    <header class="overlay-header">
+      <h3>Entrate</h3>
+      <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
+    </header>
+    <label class="field">
+      <span>Nome</span>
+      <input id="in-entrata-nome" type="text" required />
+    </label>
+    <label class="field">
+      <span>Valore</span>
+      <input id="in-entrata-valore" type="number" step="0.01" min="0" required />
+    </label>
+    <button class="btn btn-primary btn-block" value="confirm" type="submit">Aggiungi entrata</button>
+  </form>
+</dialog>
+
+<!-- Overlay: Aggiungi Uscita -->
+<dialog id="ov-uscita" class="overlay-card">
+  <form method="dialog" class="overlay-body" id="form-uscita">
+    <header class="overlay-header">
+      <h3>Uscite</h3>
+      <button class="icon-btn close" value="cancel" aria-label="Chiudi">×</button>
+    </header>
+    <label class="field">
+      <span>Nome</span>
+      <input id="in-uscita-nome" type="text" required />
+    </label>
+    <label class="field">
+      <span>Valore</span>
+      <input id="in-uscita-valore" type="number" step="0.01" min="-100000" required />
+    </label>
+    <button class="btn btn-primary btn-block" value="confirm" type="submit">Aggiungi uscita</button>
+  </form>
+</dialog>
   <script type="module" src="./app.js"></script>
 </body>
 </html>
