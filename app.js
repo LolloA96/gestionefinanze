@@ -65,7 +65,8 @@ function initDemoDataIfNeeded(){
       uscite:[{nome:'Affitto', valore:-600, ts:Date.now()}],
       goals:[], // MOD: inizializza goals vuoto
       docs:[],
-      risparmi:[]
+      risparmi:[],
+      speseStorico:[] // AGGIUNTA: storico spese mensili
     });
   }
 }
@@ -80,7 +81,7 @@ function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt
 
 // Rendering
 function render(){
-  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
   const totEntr = data.entrate.reduce((s,e)=>s+e.valore,0);
   const totUsc  = data.uscite.reduce((s,e)=>s+Math.abs(e.valore),0);
   $('#tot-entrate').textContent = formatEuro(totEntr);
@@ -151,7 +152,7 @@ function render(){
     const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
     const risparmioMese = Math.max(0, entrateMese - usciteMese);
 
-    // MOD: usa progress accumulato + risparmio corrente
+    // usa progress accumulato + risparmio corrente
     const amount = Number(g.amount || g.importo || 0);
     const progressAccumulato = Number(g.progress || 0);
     const progressLive = progressAccumulato + risparmioMese;
@@ -281,8 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const amount = parseFloat(document.getElementById('in-goal-amount')?.value);
     if (!deadline || isNaN(amount) || amount <= 0) return;
 
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
-    // MOD: inizializza l'obiettivo con progress accumulato = 0
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
     data.goals = [{ deadline, amount, ts: Date.now(), done:false, title:'Obiettivo mensile', progress:0 }];
     storage.set(KEY_DATA, data);
 
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSnackbar?.('Obiettivo creato', { type:'entrata', index:0 });
   });
   document.getElementById('close-goal')?.addEventListener('click', () => {
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
     if (!data.goals?.length) return;
     data.goals[0].done = true;
     storage.set(KEY_DATA, data);
@@ -299,41 +299,48 @@ document.addEventListener('DOMContentLoaded', () => {
     showSnackbar?.('Obiettivo chiuso', { type:'entrata', index:0 });
   });
 
-  // Reset entrate mese + salva risparmio storicizzato
-  // Reset entrate/uscite del mese + salva risparmio storicizzato e aggiorna avanzamento obiettivo
-document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
-  const ok = confirm('Azzerare entrate e uscite del mese corrente e salvare i risparmi correnti?');
-  if (!ok) return;
+  // Reset entrate/uscite del mese + salva risparmio + storico spese + avanzamento obiettivo
+  document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
+    const ok = confirm('Azzerare entrate e uscite del mese corrente e salvare i risparmi/spese correnti?');
+    if (!ok) return;
 
-  const now = Date.now();
-  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    const now = Date.now();
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
 
-  const isThisMonth = (ts) => isSameMonth(ts || now, now);
+    const isThisMonth = (ts) => isSameMonth(ts || now, now);
 
-  // Calcolo risparmio del mese prima di azzerare
-  const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
-  const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
-  const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
+    const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
+    const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
+    const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
 
-  if (risparmioCorrente > 0) {
-    // Salva nei risparmi storici
-    data.risparmi = data.risparmi || [];
-    data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
-    // Aggiorna avanzamento obiettivo attivo
-    if (data.goals?.length && !data.goals[0].done) {
-      data.goals[0].progress = (data.goals[0].progress || 0) + risparmioCorrente;
+    // Salva risparmi
+    if (risparmioCorrente > 0) {
+      data.risparmi = data.risparmi || [];
+      data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
+      if (data.goals?.length && !data.goals[0].done) {
+        data.goals[0].progress = (data.goals[0].progress || 0) + risparmioCorrente;
+      }
     }
-  }
 
-  // AZZERA mese corrente: rimuovi sia ENTRATE che USCITE del mese
-  data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
-  data.uscite  = data.uscite.filter(u => !isThisMonth(u.ts));
+    // AGGIUNTA: salva storico spese mese (etichetta "ottobre 2025", ecc.)
+    const labelMese = new Date(now).toLocaleDateString('it-IT', { month:'long', year:'numeric' });
+    data.speseStorico = data.speseStorico || [];
+    const last = data.speseStorico[0];
+    if (last && last.key === labelMese) {
+      last.valore = (last.valore || 0) + usciteMese;
+      last.ts = now;
+    } else {
+      data.speseStorico.unshift({ key: labelMese, valore: usciteMese, ts: now });
+    }
 
-  storage.set(KEY_DATA, data);
-  render();
-  showSnackbar?.('Mese azzerato: entrate e uscite rimosse, risparmi salvati', { type:'entrata', index:0 });
-});
+    // Azzera entrate e uscite del mese corrente
+    data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
+    data.uscite  = data.uscite.filter(u => !isThisMonth(u.ts));
 
+    storage.set(KEY_DATA, data);
+    render();
+    showSnackbar?.('Mese azzerato: risparmi e spese storicizzati', { type:'entrata', index:0 });
+  });
 
   // Signin
   const formSignin = $('#form-signin');
@@ -402,7 +409,7 @@ document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const nome = $('#in-entrata-nome')?.value?.trim();
     const val  = parseFloat($('#in-entrata-valore')?.value);
     if (!nome || isNaN(val)) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
     data.entrate.unshift({ nome, valore: val, ts: Date.now() });
     storage.set(KEY_DATA, data);
     dlgEntr?.close?.('confirm');
@@ -416,7 +423,7 @@ document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const nome = $('#in-uscita-nome')?.value?.trim();
     const val  = parseFloat($('#in-uscita-valore')?.value);
     if (!nome || isNaN(val)) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
     data.uscite.unshift({ nome, valore: val, ts: Date.now() });
     storage.set(KEY_DATA, data);
     dlgUsc?.close?.('confirm');
@@ -429,7 +436,7 @@ document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const title = $('#in-doc-title')?.value?.trim();
     const note  = $('#in-doc-note')?.value?.trim();
     if (!title) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
     data.docs.unshift({ title, note, ts: Date.now() });
     storage.set(KEY_DATA, data);
     docsAddPanel?.classList?.add('hidden');
