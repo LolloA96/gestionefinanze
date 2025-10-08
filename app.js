@@ -33,7 +33,7 @@ const usernameProfile = $('#username-profile');
 const dlgAdd   = $('#ov-add');
 const dlgEntr  = $('#ov-entrata');
 const dlgUsc   = $('#ov-uscita');
-const dlgGoal  = $('#ov-goal');
+const dlgGoal  = $('#ov-goal');   // USATO per obiettivi
 const dlgDocs  = $('#ov-docs');
 const docsAddPanel = $('#docs-add-panel');
 const dlgEditProfile = $('#ov-edit-profile');
@@ -63,14 +63,13 @@ function initDemoDataIfNeeded(){
     storage.set(KEY_DATA, {
       entrate:[{nome:'Stipendio', valore:1000, ts:Date.now()}],
       uscite:[{nome:'Affitto', valore:-600, ts:Date.now()}],
-      goals:[{nome:'Nuovo PC', importo:800, ts:Date.now()}],
+      goals:[], // MOD: inizializza goals vuoto
       docs:[],
-      risparmi:[] // AGGIUNTA
+      risparmi:[]
     });
   }
 }
 
-// AGGIUNTA 1: helper per confronto mese
 function isSameMonth(tsA, tsB){
   const a = new Date(tsA), b = new Date(tsB);
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
@@ -122,7 +121,7 @@ function render(){
     });
   }
 
-  // AGGIUNTA 2: Profilo - risparmi storici
+  // Profilo - risparmi storici
   const ulRisparmi = $('#risparmi-profilo'); if (ulRisparmi) { ulRisparmi.innerHTML='';
     (data.risparmi || []).forEach(r => {
       const li = document.createElement('li');
@@ -133,6 +132,39 @@ function render(){
       `;
       ulRisparmi.appendChild(li);
     });
+  }
+
+  // MOD: rendering obiettivo in Home (goal)
+  const goalEmpty = document.getElementById('goal-empty');
+  const goalActive = document.getElementById('goal-active');
+  const g = (data.goals || [])[0];
+
+  if (!goalEmpty || !goalActive) {
+    // se il markup non è presente, evita errori
+  } else if (!g || g.done) {
+    goalEmpty.classList.remove('hidden');
+    goalActive.classList.add('hidden');
+  } else {
+    const now = Date.now();
+    const isThisMonth = (ts) => isSameMonth(ts || now, now);
+    const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
+    const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
+    const risparmioMese = Math.max(0, entrateMese - usciteMese);
+    const amount = Number(g.amount || g.importo || 0);
+    const pct = amount > 0 ? Math.max(0, Math.min(100, (risparmioMese / amount) * 100)) : 0;
+
+    goalEmpty.classList.add('hidden');
+    goalActive.classList.remove('hidden');
+
+    const titleEl = goalActive.querySelector('.goal-title');
+    const deadlineEl = goalActive.querySelector('.goal-deadline');
+    const fillEl = goalActive.querySelector('.goal-bar-fill');
+    const progText = goalActive.querySelector('.goal-progress-text');
+
+    if (titleEl) titleEl.textContent = g.title || 'Obiettivo';
+    if (deadlineEl && g.deadline) deadlineEl.textContent = `Entro: ${new Date(g.deadline).toLocaleDateString('it-IT')}`;
+    if (fillEl) fillEl.style.width = `${pct}%`;
+    if (progText) progText.textContent = `${formatEuro(risparmioMese)} / ${formatEuro(amount)}`;
   }
 
   renderDocs();
@@ -232,6 +264,36 @@ document.addEventListener('DOMContentLoaded', () => {
     switchPage(t);
   }));
 
+  // MOD: Obiettivi — apertura overlay, submit e chiusura
+  document.getElementById('open-goals')?.addEventListener('click', () => {
+    if (dlgGoal?.showModal) dlgGoal.showModal(); else dlgGoal?.classList?.remove('hidden');
+  });
+  dlgGoal?.querySelector('.close')?.addEventListener('click', () => {
+    if (dlgGoal?.close) dlgGoal.close('cancel'); else dlgGoal?.classList?.add('hidden');
+  });
+  document.getElementById('form-goal')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const deadline = document.getElementById('in-goal-deadline')?.value;
+    const amount = parseFloat(document.getElementById('in-goal-amount')?.value);
+    if (!deadline || isNaN(amount) || amount <= 0) return;
+
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    data.goals = [{ deadline, amount, ts: Date.now(), done:false, title:'Obiettivo mensile' }]; // unico attivo
+    storage.set(KEY_DATA, data);
+
+    if (dlgGoal?.close) dlgGoal.close('confirm'); else dlgGoal?.classList?.add('hidden');
+    render();
+    showSnackbar?.('Obiettivo creato', { type:'entrata', index:0 });
+  });
+  document.getElementById('close-goal')?.addEventListener('click', () => {
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+    if (!data.goals?.length) return;
+    data.goals[0].done = true;
+    storage.set(KEY_DATA, data);
+    render();
+    showSnackbar?.('Obiettivo chiuso', { type:'entrata', index:0 });
+  });
+
   // AGGIUNTA 3: reset entrate mese + salva risparmio storicizzato
   document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const ok = confirm('Azzerare le entrate del mese corrente e salvare i risparmi correnti nel profilo?');
@@ -249,8 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
       data.risparmi = data.risparmi || [];
       data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
     }
-
-    // Azzera solo le ENTRATE del mese corrente
     data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
 
     storage.set(KEY_DATA, data);
