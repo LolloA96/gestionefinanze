@@ -130,7 +130,7 @@ body {
   width:44px; height:44px; border-radius:50%; background:#243b5a; display:grid; place-items:center; font-weight:700;
 }
 .profile-info h2{margin:0 0 6px}
-.pill{padding:6px 10px; border-radius:999px; background:#0f1628; border:1px solid #2b3550}
+.pill{padding:6px 10px; border-radius:999px; background:#0f1628; border:1px solid #2b3550; display: none;}
 .pill-strong{background:#16233a}
 
 /* Bottom navigation with centered FAB */

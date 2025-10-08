@@ -64,7 +64,8 @@ function initDemoDataIfNeeded(){
       entrate:[{nome:'Stipendio', valore:1000, ts:Date.now()}],
       uscite:[{nome:'Affitto', valore:-600, ts:Date.now()}],
       goals:[{nome:'Nuovo PC', importo:800, ts:Date.now()}],
-      docs:[]
+      docs:[],
+      risparmi:[] // AGGIUNTA
     });
   }
 }
@@ -80,7 +81,7 @@ function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt
 
 // Rendering
 function render(){
-  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
   const totEntr = data.entrate.reduce((s,e)=>s+e.valore,0);
   const totUsc  = data.uscite.reduce((s,e)=>s+Math.abs(e.valore),0);
   $('#tot-entrate').textContent = formatEuro(totEntr);
@@ -118,6 +119,19 @@ function render(){
       btn.addEventListener('click', () => undoSingleExpense(idx));
       li.appendChild(btn);
       ulSpese.appendChild(li);
+    });
+  }
+
+  // AGGIUNTA 2: Profilo - risparmi storici
+  const ulRisparmi = $('#risparmi-profilo'); if (ulRisparmi) { ulRisparmi.innerHTML='';
+    (data.risparmi || []).forEach(r => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span>Risparmio</span>
+        <span style="margin-left:auto; margin-right:12px; color: var(--success)">${formatEuro(r.valore)}</span>
+        <span class="pill">${new Date(r.ts).toLocaleDateString('it-IT')}</span>
+      `;
+      ulRisparmi.appendChild(li);
     });
   }
 
@@ -218,22 +232,31 @@ document.addEventListener('DOMContentLoaded', () => {
     switchPage(t);
   }));
 
-  // AGGIUNTA 2: reset entrate mese
+  // AGGIUNTA 3: reset entrate mese + salva risparmio storicizzato
   document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
-  const ok = confirm('Azzerare le entrate del mese corrente?');
-  if (!ok) return;
+    const ok = confirm('Azzerare le entrate del mese corrente e salvare i risparmi correnti nel profilo?');
+    if (!ok) return;
 
-  const now = Date.now();
-  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+    const now = Date.now();
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
 
-  // Tieni lo storico, rimuovi solo le entrate del mese corrente
-  data.entrate = data.entrate.filter(e => !isSameMonth(e.ts || now, now));
+    const isThisMonth = (ts) => isSameMonth(ts || now, now);
+    const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
+    const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
+    const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
 
-  storage.set(KEY_DATA, data);
-  render();
-  showSnackbar?.('Entrate mese azzerate', { type:'entrata', index:0 });
-});
+    if (risparmioCorrente > 0) {
+      data.risparmi = data.risparmi || [];
+      data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
+    }
 
+    // Azzera solo le ENTRATE del mese corrente
+    data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
+
+    storage.set(KEY_DATA, data);
+    render();
+    showSnackbar?.('Entrate azzerate. Risparmi salvati nel profilo', { type:'entrata', index:0 });
+  });
 
   // Signin
   const formSignin = $('#form-signin');
@@ -302,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nome = $('#in-entrata-nome')?.value?.trim();
     const val  = parseFloat($('#in-entrata-valore')?.value);
     if (!nome || isNaN(val)) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
     data.entrate.unshift({ nome, valore: val, ts: Date.now() });
     storage.set(KEY_DATA, data);
     dlgEntr?.close?.('confirm');
@@ -316,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nome = $('#in-uscita-nome')?.value?.trim();
     const val  = parseFloat($('#in-uscita-valore')?.value);
     if (!nome || isNaN(val)) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
     data.uscite.unshift({ nome, valore: val, ts: Date.now() });
     storage.set(KEY_DATA, data);
     dlgUsc?.close?.('confirm');
@@ -329,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = $('#in-doc-title')?.value?.trim();
     const note  = $('#in-doc-note')?.value?.trim();
     if (!title) return;
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
     data.docs.unshift({ title, note, ts: Date.now() });
     storage.set(KEY_DATA, data);
     docsAddPanel?.classList?.add('hidden');
