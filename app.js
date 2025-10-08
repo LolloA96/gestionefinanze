@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dlgAdd?.showModal) dlgAdd.showModal();
   else dlgAdd?.classList?.remove('hidden');
 });
+
   $('#open-docs')?.addEventListener('click', () => openDialog(dlgDocs));
   $('#open-docs-add')?.addEventListener('click', () => docsAddPanel?.classList?.remove('hidden'));
   $('#close-docs-add')?.addEventListener('click', () => docsAddPanel?.classList?.add('hidden'));
@@ -189,14 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Selettore aggiungi
   document.getElementById('btn-add-entrata')?.addEventListener('click', () => {
   dlgAdd?.close?.();
-  if (dlgEntr?.showModal) dlgEntr.showModal();
-  else dlgEntr?.classList?.remove('hidden');
+  if (dlgEntr?.showModal) dlgEntr.showModal(); else dlgEntr?.classList?.remove('hidden');
 });
 document.getElementById('btn-add-uscita')?.addEventListener('click', () => {
   dlgAdd?.close?.();
-  if (dlgUsc?.showModal) dlgUsc.showModal();
-  else dlgUsc?.classList?.remove('hidden');
+  if (dlgUsc?.showModal) dlgUsc.showModal(); else dlgUsc?.classList?.remove('hidden');
 });
+
 
 dlgAdd?.querySelector('.close')?.addEventListener('click', () => {
   if (dlgAdd?.close) dlgAdd.close('cancel');
