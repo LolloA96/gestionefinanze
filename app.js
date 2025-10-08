@@ -140,7 +140,7 @@ function render(){
   const g = (data.goals || [])[0];
 
   if (!goalEmpty || !goalActive) {
-    // se il markup non è presente, evita errori
+    // markup non presente
   } else if (!g || g.done) {
     goalEmpty.classList.remove('hidden');
     goalActive.classList.add('hidden');
@@ -150,8 +150,12 @@ function render(){
     const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
     const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
     const risparmioMese = Math.max(0, entrateMese - usciteMese);
+
+    // MOD: usa progress accumulato + risparmio corrente
     const amount = Number(g.amount || g.importo || 0);
-    const pct = amount > 0 ? Math.max(0, Math.min(100, (risparmioMese / amount) * 100)) : 0;
+    const progressAccumulato = Number(g.progress || 0);
+    const progressLive = progressAccumulato + risparmioMese;
+    const pct = amount > 0 ? Math.max(0, Math.min(100, (progressLive / amount) * 100)) : 0;
 
     goalEmpty.classList.add('hidden');
     goalActive.classList.remove('hidden');
@@ -164,7 +168,7 @@ function render(){
     if (titleEl) titleEl.textContent = g.title || 'Obiettivo';
     if (deadlineEl && g.deadline) deadlineEl.textContent = `Entro: ${new Date(g.deadline).toLocaleDateString('it-IT')}`;
     if (fillEl) fillEl.style.width = `${pct}%`;
-    if (progText) progText.textContent = `${formatEuro(risparmioMese)} / ${formatEuro(amount)}`;
+    if (progText) progText.textContent = `${formatEuro(progressLive)} / ${formatEuro(amount)}`;
   }
 
   renderDocs();
@@ -264,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switchPage(t);
   }));
 
-  // MOD: Obiettivi — apertura overlay, submit e chiusura
+  // Obiettivi — apertura overlay, submit e chiusura
   document.getElementById('open-goals')?.addEventListener('click', () => {
     if (dlgGoal?.showModal) dlgGoal.showModal(); else dlgGoal?.classList?.remove('hidden');
   });
@@ -278,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!deadline || isNaN(amount) || amount <= 0) return;
 
     const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
-    data.goals = [{ deadline, amount, ts: Date.now(), done:false, title:'Obiettivo mensile' }]; // unico attivo
+    // MOD: inizializza l'obiettivo con progress accumulato = 0
+    data.goals = [{ deadline, amount, ts: Date.now(), done:false, title:'Obiettivo mensile', progress:0 }];
     storage.set(KEY_DATA, data);
 
     if (dlgGoal?.close) dlgGoal.close('confirm'); else dlgGoal?.classList?.add('hidden');
@@ -294,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSnackbar?.('Obiettivo chiuso', { type:'entrata', index:0 });
   });
 
-  // AGGIUNTA 3: reset entrate mese + salva risparmio storicizzato
+  // Reset entrate mese + salva risparmio storicizzato
   document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const ok = confirm('Azzerare le entrate del mese corrente e salvare i risparmi correnti nel profilo?');
     if (!ok) return;
@@ -310,12 +315,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (risparmioCorrente > 0) {
       data.risparmi = data.risparmi || [];
       data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
+      // MOD: accumula nel progress dell'obiettivo attivo
+      if (data.goals?.length && !data.goals[0].done) {
+        data.goals[0].progress = (data.goals[0].progress || 0) + risparmioCorrente;
+      }
     }
+    // azzera solo le entrate del mese corrente
     data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
 
     storage.set(KEY_DATA, data);
     render();
-    showSnackbar?.('Entrate azzerate. Risparmi salvati nel profilo', { type:'entrata', index:0 });
+    showSnackbar?.('Entrate azzerate. Risparmi salvati nel profilo e avanzamento aggiornato', { type:'entrata', index:0 });
   });
 
   // Signin

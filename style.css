@@ -97,8 +97,6 @@ body {
 .topbar{
   display:flex; align-items:center; justify-content:space-between;
   padding:12px 16px; position:sticky; top:0; z-index:5;
-  background:linear-gradient(180deg, #0b0f1aff 60%, #0b0f1a00);
-  backdrop-filter: saturate(120%) blur(6px);
 }
 .greeting{color:var(--muted); margin-right:6px}
 .username{font-weight:700}
@@ -207,3 +205,11 @@ font-size:18px;
 .btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
 .btn-ghost:hover{ border-color:#93c5fd; background:#1e293b66 }
 .summary-card-inner > #reset-entrate-btn{ margin-top:8px }
+
+.goal-row{ display:flex; align-items:center; gap:12px; justify-content:space-between }
+.goal-info .goal-title{ font-weight:600 }
+.goal-deadline{ opacity:.8; font-size:.9rem }
+.goal-progress{ margin-top:10px }
+.goal-bar-bg{ width:100%; height:12px; background:#334155; border-radius:999px; overflow:hidden }
+.goal-bar-fill{ height:100%; width:0%; background:#2563eb; transition:width .3s ease } /* blu acceso */
+.hidden{ display:none !important }
