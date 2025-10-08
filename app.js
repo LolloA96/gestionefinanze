@@ -220,25 +220,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // AGGIUNTA 2: reset entrate mese
   document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
-    const ok = confirm('Azzerare le entrate del mese corrente e inserire un nuovo stipendio?');
-    if (!ok) return;
+  const ok = confirm('Azzerare le entrate del mese corrente?');
+  if (!ok) return;
 
-    const now = Date.now();
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+  const now = Date.now();
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
 
-    // Tieni storiche, rimuovi solo mese corrente
-    data.entrate = data.entrate.filter(e => !isSameMonth(e.ts || now, now));
+  // Tieni lo storico, rimuovi solo le entrate del mese corrente
+  data.entrate = data.entrate.filter(e => !isSameMonth(e.ts || now, now));
 
-    let imp = prompt('Inserisci il nuovo stipendio di questo mese (es. 1200.50):', '');
-    if (imp === null) { storage.set(KEY_DATA, data); render(); return; }
-    imp = parseFloat(String(imp).replace(',', '.'));
-    if (isNaN(imp) || imp < 0) { alert('Importo non valido.'); storage.set(KEY_DATA, data); render(); return; }
+  storage.set(KEY_DATA, data);
+  render();
+  showSnackbar?.('Entrate mese azzerate', { type:'entrata', index:0 });
+});
 
-    data.entrate.unshift({ nome:'Stipendio', valore: imp, ts: Date.now() });
-    storage.set(KEY_DATA, data);
-    render();
-    showSnackbar?.('Entrate mese resettate', { type:'entrata', index:0 });
-  });
 
   // Signin
   const formSignin = $('#form-signin');
