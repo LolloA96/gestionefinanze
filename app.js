@@ -300,33 +300,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Reset entrate mese + salva risparmio storicizzato
-  document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
-    const ok = confirm('Azzerare le entrate del mese corrente e salvare i risparmi correnti nel profilo?');
-    if (!ok) return;
+  // Reset entrate/uscite del mese + salva risparmio storicizzato e aggiorna avanzamento obiettivo
+document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
+  const ok = confirm('Azzerare entrate e uscite del mese corrente e salvare i risparmi correnti?');
+  if (!ok) return;
 
-    const now = Date.now();
-    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+  const now = Date.now();
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
 
-    const isThisMonth = (ts) => isSameMonth(ts || now, now);
-    const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
-    const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
-    const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
+  const isThisMonth = (ts) => isSameMonth(ts || now, now);
 
-    if (risparmioCorrente > 0) {
-      data.risparmi = data.risparmi || [];
-      data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
-      // MOD: accumula nel progress dell'obiettivo attivo
-      if (data.goals?.length && !data.goals[0].done) {
-        data.goals[0].progress = (data.goals[0].progress || 0) + risparmioCorrente;
-      }
+  // Calcolo risparmio del mese prima di azzerare
+  const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
+  const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
+  const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
+
+  if (risparmioCorrente > 0) {
+    // Salva nei risparmi storici
+    data.risparmi = data.risparmi || [];
+    data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
+    // Aggiorna avanzamento obiettivo attivo
+    if (data.goals?.length && !data.goals[0].done) {
+      data.goals[0].progress = (data.goals[0].progress || 0) + risparmioCorrente;
     }
-    // azzera solo le entrate del mese corrente
-    data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
+  }
 
-    storage.set(KEY_DATA, data);
-    render();
-    showSnackbar?.('Entrate azzerate. Risparmi salvati nel profilo e avanzamento aggiornato', { type:'entrata', index:0 });
-  });
+  // AZZERA mese corrente: rimuovi sia ENTRATE che USCITE del mese
+  data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
+  data.uscite  = data.uscite.filter(u => !isThisMonth(u.ts));
+
+  storage.set(KEY_DATA, data);
+  render();
+  showSnackbar?.('Mese azzerato: entrate e uscite rimosse, risparmi salvati', { type:'entrata', index:0 });
+});
+
 
   // Signin
   const formSignin = $('#form-signin');
