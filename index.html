@@ -125,10 +125,17 @@
     </nav>
   </section>
 
-  <!-- Overlay vari (immutati) -->
-   <!-- Pulsanti del chooser (puoi tenerli dove preferisci, ad es. dentro il dialog #ov-add) -->
-<button id="chooser-entrata" class="btn btn-secondary">Entrata</button>
-<button id="chooser-uscita"  class="btn btn-secondary">Uscita</button>
+<!-- Chooser aperto dal bottone + -->
+<dialog id="ov-add" class="overlay-chooser">
+  <div class="overlay-body">
+    <header class="overlay-header">
+      <h3>Aggiungi</h3>
+      <button class="icon-btn close" aria-label="Chiudi">×</button>
+    </header>
+    <div class="chooser-grid">
+    </div>
+  </div>
+</dialog>
 
 <!-- Overlay: Aggiungi Entrata -->
 <dialog id="ov-entrata" class="overlay-card">
@@ -145,7 +152,7 @@
       <span>Valore</span>
       <input id="in-entrata-valore" type="number" step="0.01" min="0" required />
     </label>
-    <button class="btn btn-primary btn-block" value="confirm" type="submit">Aggiungi entrata</button>
+    <button class="btn btn-primary btn-block" type="submit">Aggiungi entrata</button>
   </form>
 </dialog>
 
@@ -162,11 +169,12 @@
     </label>
     <label class="field">
       <span>Valore</span>
-      <input id="in-uscita-valore" type="number" step="0.01" min="-100000" required />
+      <input id="in-uscita-valore" type="number" step="0.01" required />
     </label>
-    <button class="btn btn-primary btn-block" value="confirm" type="submit">Aggiungi uscita</button>
+    <button class="btn btn-primary btn-block" type="submit">Aggiungi uscita</button>
   </form>
 </dialog>
+
   <script type="module" src="./app.js"></script>
 </body>
 </html>

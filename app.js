@@ -175,7 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bottoni globali
   $('#go-login-from-signin')?.addEventListener('click', () => showView('login'));
   $('#go-signin-from-login')?.addEventListener('click', () => showView('signin'));
-  $('#open-add')?.addEventListener('click', () => openDialog(dlgAdd));
+  $('#open-add')?.addEventListener('click', () => {
+  if (dlgAdd?.showModal) dlgAdd.showModal();
+  else dlgAdd?.classList?.remove('hidden');
+});
   $('#open-docs')?.addEventListener('click', () => openDialog(dlgDocs));
   $('#open-docs-add')?.addEventListener('click', () => docsAddPanel?.classList?.remove('hidden'));
   $('#close-docs-add')?.addEventListener('click', () => docsAddPanel?.classList?.add('hidden'));
@@ -184,8 +187,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
 
   // Selettore aggiungi
-  $('#chooser-entrata')?.addEventListener('click', () => { dlgAdd?.close?.(); openDialog(dlgEntr); });
-  $('#chooser-uscita')?.addEventListener('click', () => { dlgAdd?.close?.(); openDialog(dlgUsc); });
+  document.getElementById('btn-add-entrata')?.addEventListener('click', () => {
+  dlgAdd?.close?.();
+  if (dlgEntr?.showModal) dlgEntr.showModal();
+  else dlgEntr?.classList?.remove('hidden');
+});
+document.getElementById('btn-add-uscita')?.addEventListener('click', () => {
+  dlgAdd?.close?.();
+  if (dlgUsc?.showModal) dlgUsc.showModal();
+  else dlgUsc?.classList?.remove('hidden');
+});
+
+dlgAdd?.querySelector('.close')?.addEventListener('click', () => {
+  if (dlgAdd?.close) dlgAdd.close('cancel');
+  else dlgAdd?.classList?.add('hidden');
+});
+
   $('#chooser-goal')?.addEventListener('click',   () => { dlgAdd?.close?.(); openDialog(dlgGoal); });
   $('#chooser-doc')?.addEventListener('click',    () => { dlgAdd?.close?.(); openDialog(dlgDocs); });
 
