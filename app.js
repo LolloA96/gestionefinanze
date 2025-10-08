@@ -69,6 +69,12 @@ function initDemoDataIfNeeded(){
   }
 }
 
+// AGGIUNTA 1: helper per confronto mese
+function isSameMonth(tsA, tsB){
+  const a = new Date(tsA), b = new Date(tsB);
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+}
+
 function formatEuro(n){ return n.toLocaleString('it-IT', { style:'currency', currency:'EUR' }); }
 function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
@@ -176,9 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#go-login-from-signin')?.addEventListener('click', () => showView('login'));
   $('#go-signin-from-login')?.addEventListener('click', () => showView('signin'));
   $('#open-add')?.addEventListener('click', () => {
-  if (dlgAdd?.showModal) dlgAdd.showModal();
-  else dlgAdd?.classList?.remove('hidden');
-});
+    if (dlgAdd?.showModal) dlgAdd.showModal();
+    else dlgAdd?.classList?.remove('hidden');
+  });
 
   $('#open-docs')?.addEventListener('click', () => openDialog(dlgDocs));
   $('#open-docs-add')?.addEventListener('click', () => docsAddPanel?.classList?.remove('hidden'));
@@ -189,19 +195,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Selettore aggiungi
   document.getElementById('btn-add-entrata')?.addEventListener('click', () => {
-  dlgAdd?.close?.();
-  if (dlgEntr?.showModal) dlgEntr.showModal(); else dlgEntr?.classList?.remove('hidden');
-});
-document.getElementById('btn-add-uscita')?.addEventListener('click', () => {
-  dlgAdd?.close?.();
-  if (dlgUsc?.showModal) dlgUsc.showModal(); else dlgUsc?.classList?.remove('hidden');
-});
+    dlgAdd?.close?.();
+    if (dlgEntr?.showModal) dlgEntr.showModal(); else dlgEntr?.classList?.remove('hidden');
+  });
+  document.getElementById('btn-add-uscita')?.addEventListener('click', () => {
+    dlgAdd?.close?.();
+    if (dlgUsc?.showModal) dlgUsc.showModal(); else dlgUsc?.classList?.remove('hidden');
+  });
 
-
-dlgAdd?.querySelector('.close')?.addEventListener('click', () => {
-  if (dlgAdd?.close) dlgAdd.close('cancel');
-  else dlgAdd?.classList?.add('hidden');
-});
+  dlgAdd?.querySelector('.close')?.addEventListener('click', () => {
+    if (dlgAdd?.close) dlgAdd.close('cancel');
+    else dlgAdd?.classList?.add('hidden');
+  });
 
   $('#chooser-goal')?.addEventListener('click',   () => { dlgAdd?.close?.(); openDialog(dlgGoal); });
   $('#chooser-doc')?.addEventListener('click',    () => { dlgAdd?.close?.(); openDialog(dlgDocs); });
@@ -212,6 +217,28 @@ dlgAdd?.querySelector('.close')?.addEventListener('click', () => {
     $$('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
     switchPage(t);
   }));
+
+  // AGGIUNTA 2: reset entrate mese
+  document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
+    const ok = confirm('Azzerare le entrate del mese corrente e inserire un nuovo stipendio?');
+    if (!ok) return;
+
+    const now = Date.now();
+    const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[] });
+
+    // Tieni storiche, rimuovi solo mese corrente
+    data.entrate = data.entrate.filter(e => !isSameMonth(e.ts || now, now));
+
+    let imp = prompt('Inserisci il nuovo stipendio di questo mese (es. 1200.50):', '');
+    if (imp === null) { storage.set(KEY_DATA, data); render(); return; }
+    imp = parseFloat(String(imp).replace(',', '.'));
+    if (isNaN(imp) || imp < 0) { alert('Importo non valido.'); storage.set(KEY_DATA, data); render(); return; }
+
+    data.entrate.unshift({ nome:'Stipendio', valore: imp, ts: Date.now() });
+    storage.set(KEY_DATA, data);
+    render();
+    showSnackbar?.('Entrate mese resettate', { type:'entrata', index:0 });
+  });
 
   // Signin
   const formSignin = $('#form-signin');

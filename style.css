@@ -202,3 +202,8 @@ font-size:18px;
 
 /* Utilities */
 .app-bg{background-attachment: fixed}
+
+.btn.small{ padding:6px 10px; font-size:12px; border-radius:10px }
+.btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
+.btn-ghost:hover{ border-color:#93c5fd; background:#1e293b66 }
+.summary-card-inner > #reset-entrate-btn{ margin-top:8px }
