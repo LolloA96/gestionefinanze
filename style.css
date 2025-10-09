@@ -112,7 +112,7 @@ body {
 .summary-value{font-size:22px; font-weight:700}
 
 .list-card{background:var(--glass); border:1px solid #2b3550; border-radius:var(--radius); padding:8px 10px}
-.list-header{padding:8px 6px; color:#cbd5e1; font-weight:600}
+.list-header{color:#cbd5e1; font-weight:600}
 .list{list-style:none; margin:0; padding:0}
 .list li{
   display:flex; align-items:center; justify-content:space-between;
@@ -201,7 +201,11 @@ font-size:18px;
 /* Utilities */
 .app-bg{background-attachment: fixed}
 
-.btn.small{ padding:6px 10px; font-size:12px; border-radius:10px }
+.btn.small{ padding: 16px; 
+  font-size:16px; 
+  border-radius:10px 
+}
+
 .btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
 .btn-ghost:hover{ border-color:#93c5fd; background:#1e293b66 }
 .summary-card-inner > #reset-entrate-btn{ margin-top:8px }
@@ -214,6 +218,10 @@ font-size:18px;
 .goal-bar-fill{ height:100%; width:0%; background:#2563eb; transition:width .3s ease } /* blu acceso */
 .hidden{ display:none !important }
 
-.home-hero {
-  gap: 8px;
+/* Sezione hero della Home */
+main#home > section.home-hero{
+  display:flex;
+  flex-direction:column;
+  gap:12px;            /* prima era 8px, alza pure se serve spacing */
+  margin-bottom:8px;   /* opzionale: spaziatura rispetto alla sezione successiva */
 }
