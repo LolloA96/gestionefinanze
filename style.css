@@ -221,7 +221,7 @@ font-size:18px;
 
 /* Sezione hero della Home */
 main#home > section.home-hero{
-display:flex; /* o grid /
-flex-direction:column;
-gap:16px; / distanza tra grid-two, goals-card, list-card */
+display:flex;
+flex-direction: column;
+gap:16px;
 }
