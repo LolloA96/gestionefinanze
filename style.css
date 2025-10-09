@@ -201,9 +201,10 @@ font-size:18px;
 /* Utilities */
 .app-bg{background-attachment: fixed}
 
-.btn.small{ padding: 16px; 
+.btn.small{ 
+  padding: 16px; 
   font-size:16px; 
-  border-radius:10px 
+  border-radius:10px; 
 }
 
 .btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
