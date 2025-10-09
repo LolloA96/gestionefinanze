@@ -108,11 +108,11 @@ body {
   padding:16px; box-shadow:var(--shadow); margin-top: 16px;
 }
 .summary-row{display:flex; justify-content:space-between; gap:12px}
-.summary-title{font-size:13px; color:var(--muted)}
+.summary-title{font-size:13px; color:var(--muted); font-family: 'montserrat';}
 .summary-value{font-size:22px; font-weight:700; font-family: 'montserrat';}
 
 .list-card{background:var(--glass); border:1px solid #2b3550; border-radius:var(--radius); padding:8px 10px; margin-top: 32px;}
-.list-header{color:#cbd5e1; font-weight:600}
+.list-header{color:#cbd5e1; font-weight:600; font-family: 'montsettat';}
 .list{list-style:none; margin:0; padding:0}
 .list li{
   display:flex; align-items:center; justify-content:space-between;
