@@ -29,7 +29,17 @@
 
     <section class="profile-lists">
       <h3>Le tue spese mese per mese</h3>
+      <!-- Elenco mesi con totale e bottone Visualizza -->
       <ul id="profileExpensesList" class="list"></ul>
+
+      <!-- Template di una riga mese (JS clona e riempie) -->
+      <template id="tpl-expense-month-row">
+        <li class="expense-month-row">
+          <span class="month-label">Settembre 2025</span>
+          <span class="month-total" style="margin-left:auto; color: var(--danger)">-500,00€</span>
+          <button class="btn btn-secondary view-month-btn" type="button">Visualizza</button>
+        </li>
+      </template>
 
       <h3>I tuoi risparmi</h3>
       <ul id="profileSavingsList" class="list"></ul>
@@ -53,6 +63,17 @@
       </form>
     </div>
   </div>
+
+  <!-- POPUP: dettaglio spese di un mese -->
+  <dialog id="ov-expenses-month" class="overlay-card">
+    <div class="overlay-body">
+      <header class="overlay-header">
+        <h3 id="ov-expenses-title">Spese del mese</h3>
+        <button class="icon-btn close" aria-label="Chiudi">&times;</button>
+      </header>
+      <ul id="ov-expenses-list" class="list"></ul>
+    </div>
+  </dialog>
 
   <script type="module" src="profile.js"></script>
 </body>
