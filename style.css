@@ -167,6 +167,8 @@ dialog{border:0; padding:0; background:transparent}
 margin:0; 
 color: #fff; 
 font-size:18px;
+font-family: 'montserrat';
+padding: 24px 100px;
 }
 
 .overlay-card .btn-block{margin-top:10px}
