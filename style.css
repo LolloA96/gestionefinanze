@@ -225,3 +225,10 @@ display:flex;
 flex-direction: column;
 gap:16px;
 }
+
+.montserrat-<uniquifier> {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
