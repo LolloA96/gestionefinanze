@@ -1,52 +1,79 @@
 // app.js
-// Stato e persistenza leggera
+
+// ===============================
+// Persistenza su localStorage
+// ===============================
 const storage = {
-  get: (k, d=null) => {
-    try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }
-    catch { return d; }
-  },
+  get: (k, d=null) => { try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch{ return d; } },
   set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
   del: (k) => localStorage.removeItem(k)
 };
 
+// ===============================
 // Chiavi
+// ===============================
 const KEY_FIRST_RUN_DONE = 'gs:firstRunDone';
-const KEY_SESSION = 'gs:session';
-const KEY_DATA = 'gs:data';
+const KEY_SESSION       = 'gs:session';
+const KEY_DATA          = 'gs:data';
 
-// Helpers selettori
-const $ = (sel, root=document) => root.querySelector(sel);
-const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+// ===============================
+// Helpers DOM + Riferimenti UI
+// ===============================
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-// Views e pagine
 const viewSignin = $('#view-signin');
 const viewLogin  = $('#view-login');
 const viewApp    = $('#view-app');
 const pageHome   = $('#home');
 const pageProfile= $('#profile');
 
-// Top username
-const usernameTop = $('#username-top');
+const usernameTop     = $('#username-top');
 const usernameProfile = $('#username-profile');
 
-// Overlay refs
-const dlgAdd   = $('#ov-add');
-const dlgEntr  = $('#ov-entrata');
-const dlgUsc   = $('#ov-uscita');
-const dlgGoal  = $('#ov-goal');   // USATO per obiettivi
-const dlgDocs  = $('#ov-docs');
-const docsAddPanel = $('#docs-add-panel');
-const dlgEditProfile = $('#ov-edit-profile');
+// Overlay esistenti
+const dlgAdd          = $('#ov-add');
+const dlgEntr         = $('#ov-entrata');
+const dlgUsc          = $('#ov-uscita');
+const dlgGoal         = $('#ov-goal');
+const dlgDocs         = $('#ov-docs');
+const docsAddPanel    = $('#docs-add-panel');
+const dlgEditProfile  = $('#ov-edit-profile');
+// NUOVO: overlay “Entrate del mese” (già in index.html)
+const dlgEntrateMese  = $('#ov-entrate-mese');
 
-// // Funzioni base
-function openDialog(dlg){
-  if (dlg?.showModal) dlg.showModal();
-  else dlg?.classList?.remove('hidden');
+// ===============================
+// Utils
+// ===============================
+function isSameMonth(tsA, tsB){
+  const a = new Date(tsA), b = new Date(tsB);
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 }
+function formatEuro(n){ return n.toLocaleString('it-IT', { style:'currency', currency:'EUR' }); }
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+// ===============================
+// Dati demo al primo avvio
+// ===============================
+function initDemoDataIfNeeded(){
+  if (!storage.get(KEY_DATA, null)){
+    storage.set(KEY_DATA, {
+      entrate:[{ nome:'Stipendio', valore:1000, ts:Date.now() }],
+      uscite:[{ nome:'Affitto',   valore:-600, ts:Date.now() }],
+      goals:[], docs:[], risparmi:[],
+      speseStorico:[]
+    });
+  }
+}
+
+// ===============================
+// Navigazione / Vista
+// ===============================
+function openDialog(dlg){ if (dlg?.showModal) dlg.showModal(); else dlg?.classList?.remove('hidden'); }
 function showView(which){
   [viewSignin, viewLogin, viewApp].forEach(v => v && v.classList.add('hidden'));
-  if (which === 'signin') viewSignin?.classList?.remove('hidden');
-  else if (which === 'login') viewLogin?.classList?.remove('hidden');
+  if (which==='signin') viewSignin?.classList?.remove('hidden');
+  else if (which==='login') viewLogin?.classList?.remove('hidden');
   else viewApp?.classList?.remove('hidden');
 }
 function switchPage(tab){
@@ -58,28 +85,10 @@ function hydrateUser(session){
   if (usernameTop) usernameTop.textContent = name;
   if (usernameProfile) usernameProfile.textContent = name;
 }
-function initDemoDataIfNeeded(){
-  if (!storage.get(KEY_DATA, null)){
-    storage.set(KEY_DATA, {
-      entrate:[{nome:'Stipendio', valore:1000, ts:Date.now()}],
-      uscite:[{nome:'Affitto', valore:-600, ts:Date.now()}],
-      goals:[], // MOD: inizializza goals vuoto
-      docs:[],
-      risparmi:[],
-      speseStorico:[] // AGGIUNTA: storico spese mensili
-    });
-  }
-}
 
-function isSameMonth(tsA, tsB){
-  const a = new Date(tsA), b = new Date(tsB);
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
-}
-
-function formatEuro(n){ return n.toLocaleString('it-IT', { style:'currency', currency:'EUR' }); }
-function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
+// ===============================
 // Rendering
+// ===============================
 function render(){
   const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
   const totEntr = data.entrate.reduce((s,e)=>s+e.valore,0);
@@ -87,6 +96,7 @@ function render(){
   $('#tot-entrate').textContent = formatEuro(totEntr);
   $('#tot-risparmi').textContent = formatEuro(Math.max(0, totEntr - totUsc));
 
+  // Home: anteprima spese
   const ulHome = $('#spese-mese'); if (ulHome) { ulHome.innerHTML='';
     data.uscite.slice(0,5).forEach((it, idx) => {
       const li = document.createElement('li');
@@ -105,6 +115,7 @@ function render(){
     });
   }
 
+  // Profilo: elenco spese completo
   const ulSpese = $('#spese-profilo'); if (ulSpese) { ulSpese.innerHTML='';
     data.uscite.forEach((it, idx) => {
       const li = document.createElement('li');
@@ -122,7 +133,7 @@ function render(){
     });
   }
 
-  // Profilo - risparmi storici
+  // Profilo: risparmi storici
   const ulRisparmi = $('#risparmi-profilo'); if (ulRisparmi) { ulRisparmi.innerHTML='';
     (data.risparmi || []).forEach(r => {
       const li = document.createElement('li');
@@ -135,7 +146,7 @@ function render(){
     });
   }
 
-  // MOD: rendering obiettivo in Home (goal)
+  // Home: obiettivo
   const goalEmpty = document.getElementById('goal-empty');
   const goalActive = document.getElementById('goal-active');
   const g = (data.goals || [])[0];
@@ -152,7 +163,6 @@ function render(){
     const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
     const risparmioMese = Math.max(0, entrateMese - usciteMese);
 
-    // usa progress accumulato + risparmio corrente
     const amount = Number(g.amount || g.importo || 0);
     const progressAccumulato = Number(g.progress || 0);
     const progressLive = progressAccumulato + risparmioMese;
@@ -174,6 +184,7 @@ function render(){
 
   renderDocs();
 }
+
 function renderDocs(){
   const data = storage.get(KEY_DATA, { docs:[] });
   const ul = $('#docs-ul'); if (!ul) return;
@@ -184,6 +195,7 @@ function renderDocs(){
     ul.appendChild(li);
   });
 }
+
 function undoSingleExpense(indexInUscite){
   const data = storage.get(KEY_DATA, { entrate:[], uscite:[] });
   if (indexInUscite < 0 || indexInUscite >= data.uscite.length) return;
@@ -192,7 +204,65 @@ function undoSingleExpense(indexInUscite){
   render();
 }
 
-// Snackbar (safe)
+// ===============================
+// NUOVE funzioni: Entrate del mese (overlay + delete singola)
+// ===============================
+function openEntrateMeseDialog(){
+  const dlg = dlgEntrateMese || document.getElementById('ov-entrate-mese');
+  if (!dlg) return;
+  renderEntrateMeseList();
+  if (dlg.showModal) dlg.showModal(); else dlg.classList.remove('hidden');
+}
+function closeEntrateMeseDialog(){
+  const dlg = dlgEntrateMese || document.getElementById('ov-entrate-mese');
+  if (!dlg) return;
+  if (dlg.close) dlg.close('cancel'); else dlg.classList.add('hidden');
+}
+function renderEntrateMeseList(){
+  const ul = document.getElementById('lista-entrate-mese'); if (!ul) return;
+  ul.innerHTML = '';
+  const now = Date.now();
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+
+  const entrateMese = (data.entrate || []).filter(e => isSameMonth(e.ts || now, now));
+
+  if (entrateMese.length === 0){
+    const li = document.createElement('li');
+    li.innerHTML = `<span>Nessuna entrata registrata questo mese</span>`;
+    ul.appendChild(li);
+    return;
+  }
+
+  entrateMese.forEach(e => {
+    const realIndex = data.entrate.findIndex(x => x.ts === e.ts && x.nome === e.nome && x.valore === e.valore);
+    const li = document.createElement('li');
+    const dataStr = e.ts ? new Date(e.ts).toLocaleDateString('it-IT') : '';
+    li.innerHTML = `
+      <span>${escapeHtml(e.nome)}${dataStr ? ' · ' + dataStr : ''}</span>
+      <span style="margin-left:auto; margin-right:12px; color: var(--success)">${formatEuro(e.valore)}</span>
+    `;
+    const btn = document.createElement('button');
+    btn.className = 'row-action';
+    btn.title = 'Elimina entrata';
+    btn.innerHTML = '<span class="icon icon-trash"></span>';
+    btn.addEventListener('click', () => deleteSingleEntrata(realIndex));
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
+function deleteSingleEntrata(realIndex){
+  const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[] });
+  if (realIndex < 0 || realIndex >= data.entrate.length) return;
+  data.entrate.splice(realIndex, 1);
+  storage.set(KEY_DATA, data);
+  render();
+  renderEntrateMeseList();
+  showSnackbar?.('Entrata eliminata', { type:'entrata', index: realIndex });
+}
+
+// ===============================
+// Snackbar
+// ===============================
 let showSnackbar = () => {};
 document.addEventListener('DOMContentLoaded', () => {
   const sb = document.getElementById('snackbar');
@@ -227,7 +297,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Bind eventi e boot in un unico DOMContentLoaded
+// ===============================
+// Bind eventi + Boot
+// ===============================
 document.addEventListener('DOMContentLoaded', () => {
   // Bottoni globali
   $('#go-login-from-signin')?.addEventListener('click', () => showView('login'));
@@ -269,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switchPage(t);
   }));
 
-  // Obiettivi — apertura overlay, submit e chiusura
+  // Obiettivi
   document.getElementById('open-goals')?.addEventListener('click', () => {
     if (dlgGoal?.showModal) dlgGoal.showModal(); else dlgGoal?.classList?.remove('hidden');
   });
@@ -299,21 +371,19 @@ document.addEventListener('DOMContentLoaded', () => {
     showSnackbar?.('Obiettivo chiuso', { type:'entrata', index:0 });
   });
 
-  // Reset entrate/uscite del mese + salva risparmio + storico spese + avanzamento obiettivo
+  // Reset mese (risparmi + storico spese + azzeramento)
   document.getElementById('reset-entrate-btn')?.addEventListener('click', () => {
     const ok = confirm('Azzerare entrate e uscite del mese corrente e salvare i risparmi/spese correnti?');
     if (!ok) return;
 
     const now = Date.now();
     const data = storage.get(KEY_DATA, { entrate:[], uscite:[], goals:[], docs:[], risparmi:[], speseStorico:[] });
-
     const isThisMonth = (ts) => isSameMonth(ts || now, now);
 
     const entrateMese = data.entrate.filter(e => isThisMonth(e.ts)).reduce((s,e)=>s+e.valore,0);
     const usciteMese  = data.uscite.filter(u => isThisMonth(u.ts)).reduce((s,u)=>s+Math.abs(u.valore),0);
     const risparmioCorrente = Math.max(0, entrateMese - usciteMese);
 
-    // Salva risparmi
     if (risparmioCorrente > 0) {
       data.risparmi = data.risparmi || [];
       data.risparmi.unshift({ valore: risparmioCorrente, ts: now });
@@ -322,7 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // AGGIUNTA: salva storico spese mese (etichetta "ottobre 2025", ecc.)
     const labelMese = new Date(now).toLocaleDateString('it-IT', { month:'long', year:'numeric' });
     data.speseStorico = data.speseStorico || [];
     const last = data.speseStorico[0];
@@ -333,74 +402,12 @@ document.addEventListener('DOMContentLoaded', () => {
       data.speseStorico.unshift({ key: labelMese, valore: usciteMese, ts: now });
     }
 
-    // Azzera entrate e uscite del mese corrente
     data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
     data.uscite  = data.uscite.filter(u => !isThisMonth(u.ts));
 
     storage.set(KEY_DATA, data);
     render();
     showSnackbar?.('Mese azzerato: risparmi e spese storicizzati', { type:'entrata', index:0 });
-  });
-
-  // Signin
-  const formSignin = $('#form-signin');
-  formSignin?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = $('#su-name')?.value?.trim();
-    const email = $('#su-email')?.value?.trim()?.toLowerCase();
-    const password = $('#su-password')?.value;
-    if (!name || !email || !password) return;
-    const uid = 'uid_' + Math.random().toString(36).slice(2,10);
-    const session = { uid, name, email };
-    storage.set(KEY_SESSION, session);
-    storage.set(KEY_FIRST_RUN_DONE, true);
-    initDemoDataIfNeeded();
-    hydrateUser(session);
-    showView('app');
-    render();
-  });
-
-  // Login
-  const formLogin = $('#form-login');
-  formLogin?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = $('#li-email')?.value?.trim()?.toLowerCase();
-    const password = $('#li-password')?.value;
-    if (!email || !password) return;
-    let session = storage.get(KEY_SESSION, null);
-    if (session && session.email === email) {
-      // ok
-    } else if (!session) {
-      const name = email.split('@')[0].replace(/\W+/g,' ').trim() || 'Utente';
-      session = { uid: 'uid_' + Math.random().toString(36).slice(2,10), name, email };
-      storage.set(KEY_SESSION, session);
-    } else {
-      session.email = email;
-      storage.set(KEY_SESSION, session);
-    }
-    initDemoDataIfNeeded();
-    hydrateUser(session);
-    showView('app');
-    render();
-  });
-
-  // Edit profilo
-  $('#form-edit-profile')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = $('#in-profile-name')?.value?.trim();
-    const email = $('#in-profile-email')?.value?.trim()?.toLowerCase();
-    if (!name || !email) return;
-    const session = storage.get(KEY_SESSION, {});
-    session.name = name; session.email = email;
-    storage.set(KEY_SESSION, session);
-    hydrateUser(session);
-    dlgEditProfile?.close?.('confirm');
-  });
-  $('#open-edit-profile')?.addEventListener('click', () => {
-    const s = storage.get(KEY_SESSION, {});
-    const n = $('#in-profile-name'); if (n) n.value = s.name || '';
-    const e = $('#in-profile-email'); if (e) e.value = s.email || '';
-    openDialog(dlgEditProfile);
   });
 
   // Entrata
@@ -443,7 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDocs();
   });
 
-  // BOOT dopo aver registrato tutti i listener
+  // NUOVO: overlay “Entrate del mese”
+  document.getElementById('open-entrate-mese')?.addEventListener('click', openEntrateMeseDialog);
+  document.querySelector('#ov-entrate-mese .close')?.addEventListener('click', closeEntrateMeseDialog);
+
+  // Boot
   const firstDone = storage.get(KEY_FIRST_RUN_DONE, false);
   const session = storage.get(KEY_SESSION, null);
   if (!firstDone) showView('signin');
