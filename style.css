@@ -209,6 +209,10 @@ padding: 0px 100px 24px 0px;
   border-radius:10px; 
 }
 
+.goal-progress-text { 
+  display: none;;
+}
+
 .btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
 .btn-ghost:hover{ border-color:#93c5fd; background:#1e293b66 }
 .summary-card-inner > #reset-entrate-btn{ margin-top:8px }
