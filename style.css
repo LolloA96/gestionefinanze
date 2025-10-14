@@ -75,7 +75,7 @@ body {
 .btn-block{width:100%}
 .btn-primary{background:var(--primary); color:white}
 .btn-primary:hover{background:var(--primary-2)}
-.btn-secondary{background:#111827; color:var(--text); border:1px solid #303a52; font-family: ;}
+.btn-secondary{background:#111827; color:var(--text); border:1px solid #303a52; font-family: 'Montserrat' ;}
 .btn-secondary:hover{background:#0f1628}
 .btn-ghost{background:transparent; color:#93c5fd}
 .btn:active{transform:translateY(1px)}
@@ -168,7 +168,7 @@ margin:0;
 color: #fff; 
 font-size:18px;
 font-family: 'montserrat';
-padding: 0px 100px 24px 100px;
+padding: 0px 100px 24px 0px;
 }
 
 .overlay-card .btn-block{margin-top:10px}
