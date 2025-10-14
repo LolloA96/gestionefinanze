@@ -108,8 +108,8 @@ body {
   padding:16px; box-shadow:var(--shadow); margin-top: 16px;
 }
 .summary-row{display:flex; justify-content:space-between; gap:12px}
-.summary-title{font-size:13px; color:var(--muted); font-family: 'montserrat'; }
-.summary-value{font-size:22px; font-weight:700; font-family: 'montserrat'; }
+.summary-title{font-size:13px; color:var(--muted); font-family: 'Montserrat'; }
+.summary-value{font-size:22px; font-weight:700; font-family: 'Montserrat'; }
 
 .list-card{background:var(--glass); border:1px solid #2b3550; border-radius:var(--radius); padding:8px 10px; margin-top: 32px;}
 .list-header{color:#cbd5e1; font-weight:600; font-family: 'Montserrat'; }
@@ -226,7 +226,7 @@ flex-direction: column;
 gap:16px;
 }
 
-.montserrat-<uniquifier> {
+.montserrat- <uniquifier> {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;
