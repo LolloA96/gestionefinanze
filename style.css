@@ -116,7 +116,7 @@ body {
 .list{list-style:none; margin:0; padding:0}
 .list li{
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px; border-top:1px solid ##fff; font-size:14px;
+  padding:12px; border-top:1px solid ##fff; font-size:14px; color: #fff !important;
 }
 .list li:first-child{border-top:0}
 
@@ -213,7 +213,7 @@ padding: 0px 100px 24px 0px;
   display: none;;
 }
 
-.btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd }
+.btn-ghost{ background:transparent; border:1px solid #33415566; color:#93c5fd; font-family: 'montserrat'; }
 .btn-ghost:hover{ border-color:#93c5fd; background:#1e293b66 }
 .summary-card-inner > #reset-entrate-btn{ margin-top:8px }
 
