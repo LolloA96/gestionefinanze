@@ -164,7 +164,7 @@ function render(){
     const risparmioMese = Math.max(0, entrateMese - usciteMese);
 
     const amount = Number(g.amount || g.importo || 0);
-    const progressAccumulato = Number(g.progress || 0);
+       const progressAccumulato = Number(g.progress || 0);
     const progressLive = progressAccumulato + risparmioMese;
     const pct = amount > 0 ? Math.max(0, Math.min(100, (progressLive / amount) * 100)) : 0;
 
@@ -258,6 +258,52 @@ function deleteSingleEntrata(realIndex){
   render();
   renderEntrateMeseList();
   showSnackbar?.('Entrata eliminata', { type:'entrata', index: realIndex });
+}
+
+// ===============================
+// NUOVE funzioni: Tutte le spese (overlay + rendering)
+// ===============================
+function renderTutteLeSpese(){
+  const ul = document.getElementById('lista-tutte-spese'); if (!ul) return;
+  ul.innerHTML = '';
+  const data = storage.get(KEY_DATA, { uscite:[] });
+
+  if (!data.uscite.length){
+    const li = document.createElement('li');
+    li.innerHTML = `<span>Nessuna spesa registrata</span>`;
+    ul.appendChild(li);
+    return;
+  }
+
+  data.uscite.forEach((it, idx) => {
+    const li = document.createElement('li');
+    const dateStr = it.ts ? new Date(it.ts).toLocaleDateString('it-IT') : '';
+    li.innerHTML = `
+      <span>${escapeHtml(it.nome)}${dateStr ? ' · ' + dateStr : ''}</span>
+      <span style="margin-left:auto; margin-right:12px; color: var(--danger)">${formatEuro(Math.abs(it.valore))}</span>
+    `;
+
+    const btn = document.createElement('button');
+    btn.className = 'row-action';
+    btn.title = 'Annulla spesa';
+    btn.innerHTML = '<span class="icon icon-trash"></span>';
+    btn.addEventListener('click', () => {
+      undoSingleExpense(idx);
+      renderTutteLeSpese();
+    });
+
+    li.appendChild(btn);
+    ul.appendChild(li);
+  });
+}
+function openOverlayTutteSpese(){
+  const dlg = document.getElementById('ov-tutte-spese'); if (!dlg) return;
+  renderTutteLeSpese();
+  if (dlg.showModal) dlg.showModal(); else dlg.classList.remove('hidden');
+}
+function closeOverlayTutteSpese(){
+  const dlg = document.getElementById('ov-tutte-spese'); if (!dlg) return;
+  if (dlg.close) dlg.close('cancel'); else dlg.classList.add('hidden');
 }
 
 // ===============================
@@ -402,8 +448,8 @@ document.addEventListener('DOMContentLoaded', () => {
       data.speseStorico.unshift({ key: labelMese, valore: usciteMese, ts: now });
     }
 
-    data.entrate = data.entrate.filter(e => !isThisMonth(e.ts));
-    data.uscite  = data.uscite.filter(u => !isThisMonth(u.ts));
+    data.entrate = data.entrate.filter(e => !isSameMonth(e.ts || now, now));
+    data.uscite  = data.uscite.filter(u => !isSameMonth(u.ts || now, now));
 
     storage.set(KEY_DATA, data);
     render();
@@ -450,9 +496,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDocs();
   });
 
-  // NUOVO: overlay “Entrate del mese”
+  // NUOVI listener: overlay “Entrate del mese” e “Tutte le spese”
   document.getElementById('open-entrate-mese')?.addEventListener('click', openEntrateMeseDialog);
   document.querySelector('#ov-entrate-mese .close')?.addEventListener('click', closeEntrateMeseDialog);
+
+  document.getElementById('btn-visualizza-spese')?.addEventListener('click', openOverlayTutteSpese);
+  document.querySelector('#ov-tutte-spese .close')?.addEventListener('click', closeOverlayTutteSpese);
 
   // Boot
   const firstDone = storage.get(KEY_FIRST_RUN_DONE, false);
