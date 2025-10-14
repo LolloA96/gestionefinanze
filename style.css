@@ -70,12 +70,12 @@ body {
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
   gap:8px; padding:12px 14px; border-radius:12px; border:0; cursor:pointer;
-  transition:transform .05s ease, background .2s ease, opacity .2s ease;
+  transition:transform .05s ease, background .2s ease, opacity .2s ease; font-family: 'montsettat';
 }
 .btn-block{width:100%}
 .btn-primary{background:var(--primary); color:white}
 .btn-primary:hover{background:var(--primary-2)}
-.btn-secondary{background:#111827; color:var(--text); border:1px solid #303a52}
+.btn-secondary{background:#111827; color:var(--text); border:1px solid #303a52; font-family: ;}
 .btn-secondary:hover{background:#0f1628}
 .btn-ghost{background:transparent; color:#93c5fd}
 .btn:active{transform:translateY(1px)}
