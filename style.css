@@ -73,8 +73,8 @@ body {
   transition:transform .05s ease, background .2s ease, opacity .2s ease; font-family: 'montsettat';
 }
 .btn-block{width:100%}
-.btn-primary{background:var(--primary); color:white}
-.btn-primary:hover{background:var(--primary-2)}
+.btn-primary{background:var(--primary); color:white; font-family: 'monteserrat';}
+.btn-primary:hover{background:var(--primary-2); font-family: 'monteserrat';}
 .btn-secondary{background:#111827; color:var(--text); border:1px solid #303a52; font-family: 'Montserrat' ;}
 .btn-secondary:hover{background:#0f1628}
 .btn-ghost{background:transparent; color:#93c5fd}
